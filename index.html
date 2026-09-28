@@ -2,155 +2,279 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>مفاجأة</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>منيو مطعم النكهة الشهية</title>
+    <meta name="description" content="قائمة طعام مطعم النكهة الشهية - أشهى الوجبات المشوية، المقبلات، والمشروبات الطازجة.">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <!-- SEO: Schema.org JSON-LD structured data for Google -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "Restaurant",
+      "name": "مطعم النكهة الشهية",
+      "image": "https://via.placeholder.com/1200x630",
+      "hasMenu": {
+        "@type": "Menu",
+        "name": "القائمة الرئيسية",
+        "hasMenuSection": [
+          {
+            "@type": "MenuSection",
+            "name": "الوجبات الرئيسية",
+            "hasMenuItem": [
+              {
+                "@type": "MenuItem",
+                "name": "برغر لحم ديلوكس",
+                "description": "لحم بقر طازج مع جبنة شيدر وصلصة خاصة",
+                "offers": { "@type": "Offer", "price": "8.50", "priceCurrency": "USD" }
+              }
+            ]
+          }
+        ]
+      }
+    }
+    </script>
+
     <style>
-        body { margin: 0; padding: 0; display: flex; justify-content: center; align-items: center; min-height: 100vh; background: linear-gradient(135deg, #fce4ec, #f8bbd0); font-family: sans-serif; text-align: center; }
-        .card { background: white; padding: 40px; border-radius: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); max-width: 500px; width: 90%; }
-        .btn { background: #d81b60; color: white; border: none; padding: 15px 30px; border-radius: 25px; cursor: pointer; font-size: 18px; margin: 10px; }
-        #hidden-part { display: none; margin-top: 20px; }
+        :root {
+            --primary-color: #e63946;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+            --text-color: #2b2d42;
+            --accent-color: #f1faee;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Cairo', sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            padding-bottom: 40px;
+        }
+
+        header {
+            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800') center/cover;
+            color: white;
+            text-align: center;
+            padding: 50px 20px;
+        }
+
+        header h1 {
+            font-size: 2.2rem;
+            margin-bottom: 8px;
+        }
+
+        header p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        /* Nav Categories Filter */
+        .categories-nav {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            padding: 20px 10px;
+            background-color: var(--card-bg);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow-x: auto;
+        }
+
+        .category-btn {
+            border: none;
+            background: #eee;
+            color: var(--text-color);
+            padding: 8px 18px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .category-btn.active, .category-btn:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Menu Grid */
+        .container {
+            max-width: 800px;
+            margin: 30px auto;
+            padding: 0 15px;
+        }
+
+        .menu-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+
+        .menu-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s ease;
+        }
+
+        .menu-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+        }
+
+        .card-body {
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            flex-grow: 1;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+
+        .item-title {
+            font-size: 1.1rem;
+            font-weight: 700;
+        }
+
+        .item-price {
+            background-color: #fff3f3;
+            color: var(--primary-color);
+            font-weight: 700;
+            padding: 4px 10px;
+            border-radius: 8px;
+            font-size: 0.95rem;
+        }
+
+        .item-desc {
+            font-size: 0.88rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            font-size: 0.85rem;
+            color: #777;
+        }
     </style>
 </head>
 <body>
 
-<div class="card" id="main-card">
-    <button class="btn" id="btn-reveal">اضغطي هنا للمفاجأة</button>
+    <header>
+        <h1>مطعم النكهة الشهية</h1>
+        <p>أطيب الوجبات الشرقية والغربية أونلاين</p>
+    </header>
 
-    <div id="hidden-part">
-        <p style="font-size: 1.2rem; text-align: right; color: #333;">
-بعرف إنو يمكن رح تستغربي من كلامي
-ورح تقولي كيف ممكن إنسان يعرف بنت من يوم واحد ويحكي معها بهالطريقة
-بس أنا من النوع اللي لما يحس بشي ما بيعرف يمثل إنو ما حس فيه
-وأنا اليوم حسيت بشي ما قدرت أخبيه عنك
-يمكن تسرعت
-ويمكن كلماتي أكبر من الوقت اللي بينا
-بس أنا ما عندي وقت ضيّعو وأنا عم حاول أرتب مشاعري على مهل
-في أشياء القلب بيقررها قبل ما العقل يلحق يناقشها
-وأنتِ كنتِ من هالأشياء
-أنا من أول ما شفت عيونك حسيت إنو في شي مو طبيعي
-عيونك مو بس حلوين
-عيونك عندها قدرة غريبة تخلي الواحد ينسى شو كان بدو يحكي
-ويضل يتطلع فيهن وكأنو عم يقرأ قصيدة ما إلها آخر
-وبعدين دلعك
-يا الله على دلعك
-فيكي هالنوع من الدلال اللي ما بيحتاج تصنّع
-دلع بيطلع منك عفوي
-بضحكتك وبطريقة حكيك وبكل تفصيل صغير فيكي
-وكأنك ما بتعرفي قديش هالشي ممكن يعمل فوضى بقلب شخص قدامك
-أما جمالك
-فأنا ما بعرف كيف بدي أوصفه بدون ما أظلمك بالكلام
-لأنو في جمال بينوصف
-وفي جمال بيخلّي اللغة نفسها تعجز
-وأنتِ من النوع التاني
-يمكن اليوم أول يوم بينا
-بس أنا اليوم شفت بنت ما قدرت اعتبرها مجرد معرفة جديدة
-شفت بنت علقت براسي من أول حديث
-وظلت بقلبي حتى بعد ما خلص الحكي
-ويمكن أنا تسرعت لما قلت إني بحبك
-بس شو بدي أعمل إذا قلبي سبقني؟
-شو بدي أعمل إذا كل مرة حاولت أقول لحالي لسا بكير
-كانت عيونك تجي ببالي وتخرب كل محاولاتي إني أكون عاقل؟
-أنا بعشقك
-وبعرف إنو هالكلمة كبيرة على يوم واحد
-بس أحياناً العمر كله ما بيعمل اللي بتعمله لحظة وحدة مع الشخص الصح
-أنا ما عم قول إنو بعرفك بالكامل
-ولا عم ادعي إني عشت معك ألف حكاية
-أنا بس عم قول إنو في شي فيكي لمسني
-شي خلاني بدي أعرفك أكتر
-وأقرب من عالمك أكتر
-وأعرف شو بيضحكك وشو بيزعلك وشو بيخلي عيونك تلمع بهالطريقة
-بدي أعرف البنت اللي ورا هالدلع
-ورا هالعيون
-ورا هالجمال
-بدي أعرف قلبك قبل كل شي
-وإذا بتقوليلي إنو أنا مستعجل
-رح قلك معك حق
-أنا مستعجل جداً
-بس مو مستعجل آخد منك وعد
-ولا مستعجل أفرض حالي عليك
-أنا مستعجل بس إني ما أخلي شعوري يضل ساكت
-لأنو ببساطة
-أنتِ دخلتي حياتي اليوم
-بس أخدتي مساحة بقلبي كأنك موجودة من زمان
-وما بعرف شو رح تعمل فينا الأيام
-يمكن تكوني مجرد أجمل صدفة مرّت علي
-ويمكن تكوني بداية الحكاية اللي ما كنت ناطرها
-بس اللي بعرفه هلق إنو أنا ما بدي أتعامل معك كأنك شخص عابر
-أنتِ مو عابرة بالنسبة إلي
-أنتِ عيون علقت بذاكرتي
-ودلع علّق بقلبي
-وجمال خلاني أوقف قدامك عاجز عن وصفك
-وأنا الشخص اللي رغم إنو بيعرف إنو مستعجل
-ما قدر يمنع حاله يقولها بصراحة
-أنا بحبك
-وبعشقك
-ويمكن هالحب لسا بأول سطر من حكايته
-بس أنا مستعد خلي الأيام تكتب باقي السطور
-وإذا سألتيني ليش أنتِ بالذات
-ما رح أعطيكي جواب منطقي
-رح قلك لأنو عيونك اختارت قلبي قبل ما أنا أختارك
-ولأنو دلعك سرق مني هدوئي
-ولأنو جمالك عمل فيني شي ما قدرت أقاومه
-ولأنك ببساطة من أول يوم
-خلّيتيني أحس إنو في إنسانة ما بدي تكون مجرد صدفة بحياتي
-فإي نعم
-أنا تسرعت
-وإي نعم
-يمكن ما إلي حق أحكي عنك وكأنك كل شي وأنا لسا بعرفك من يوم
-بس القلب ما بيعرف قوانين الوقت
-وأنا اليوم
-ما بدي ضيّع دقيقة وأنا مخبي عنك الحقيقة
-الحقيقة إنك عجبتي قلبي
-وسكنتِ بالي
-وأخذتي عيوني قبل ما آخد أنا حتى فرصة أتعود على وجودك
-وأجمل شي في الموضوع
-إنو كل هالحكاية بلشت اليوم
-فيمكن بكرا أعرفك أكتر
-وبعد بكرا أحبك أكتر
-وبعده يمكن أفهم إنو الشعور اللي أخافني اليوم
-كان أجمل شي صار معي من وقت طويل
-بس لليوم
-خليني قولها ببساطة ومن دون فلسفة
-أنا وقعت فيكي بسرعة
-يمكن بسرعة جنونية
-بس وقعت بسبب عيونك
-وبسبب دلعك
-وبسبب جمالك
-وبسبب هالإحساس الغريب اللي ما بعرف من وين إجى
-وأنا ما عندي وقت ضيّعو وأنا عم حاول أنكر شي صار واضح جواتي
-أنتِ بالنسبة إلي مو مجرد بنت عرفتها اليوم
-أنتِ أول قصيدة كتبها قلبي قبل ما يعرف حتى كيف يكتب اسمها 🤍
-        </p>
-        <h2 style="color: #d81b60;">ممكن نكون سوا وتحبيني ؟ </h2>
-        <button class="btn" id="yes-btn">نعم</button>
-        <button class="btn" id="no-btn">لا</button>
+    <!-- أزرار التصنيفات -->
+    <nav class="categories-nav">
+        <button class="category-btn active" onclick="filterMenu('all')">الكل</button>
+        <button class="category-btn" onclick="filterMenu('mains')">الوجبات الرئيسية</button>
+        <button class="category-btn" onclick="filterMenu('appetizers')">المقبلات</button>
+        <button class="category-btn" onclick="filterMenu('drinks')">المشروبات</button>
+    </nav>
+
+    <!-- قائمة الطعام -->
+    <div class="container">
+        <div class="menu-grid" id="menuContainer">
+
+            <!-- عنصر 1 -->
+            <div class="menu-card" data-category="mains">
+                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500" alt="برغر ديلوكس" class="card-img">
+                <div class="card-body">
+                    <div class="card-header">
+                        <span class="item-title">برغر لحم ديلوكس</span>
+                        <span class="item-price">$8.50</span>
+                    </div>
+                    <p class="item-desc">شريحة لحم بقر طازجة مع جبنة الشيدر، الخس، الطماطم وصلصة البيت الخاصة.</p>
+                </div>
+            </div>
+
+            <!-- عنصر 2 -->
+            <div class="menu-card" data-category="mains">
+                <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500" alt="بيتزا مارجريتا" class="card-img">
+                <div class="card-body">
+                    <div class="card-header">
+                        <span class="item-title">بيتزا مارجريتا</span>
+                        <span class="item-price">$10.00</span>
+                    </div>
+                    <p class="item-desc">عجينة إيطالية هشة، صلصة طماطم معتقة، جبنة موزاريلا طازجة وأوراق الريحان.</p>
+                </div>
+            </div>
+
+            <!-- عنصر 3 -->
+            <div class="menu-card" data-category="appetizers">
+                <img src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=500" alt="بطاطس مقرمشة" class="card-img">
+                <div class="card-body">
+                    <div class="card-header">
+                        <span class="item-title">بطاطس مقلية بالبهارات</span>
+                        <span class="item-price">$3.50</span>
+                    </div>
+                    <p class="item-desc">أصابع البطاطس المقرمشة مغطاة بتتبيلة الأعشاب والبهارات الخاصة.</p>
+                </div>
+            </div>
+
+            <!-- عنصر 4 -->
+            <div class="menu-card" data-category="drinks">
+                <img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500" alt="عصير برتقال" class="card-img">
+                <div class="card-body">
+                    <div class="card-header">
+                        <span class="item-title">عصير برتقال طازج</span>
+                        <span class="item-price">$2.50</span>
+                    </div>
+                    <p class="item-desc">عصير برتقال طبيعي 100% معصور طازج عند الطلب بدون إضافة سكر.</p>
+                </div>
+            </div>
+
+        </div>
     </div>
-</div>
 
-<script>
-    const btnReveal = document.getElementById('btn-reveal');
-    const hiddenPart = document.getElementById('hidden-part');
-    const yesBtn = document.getElementById('yes-btn');
-    const noBtn = document.getElementById('no-btn');
-    const mainCard = document.getElementById('main-card');
+    <footer>
+        <p>© 2026 مطعم النكهة الشهية - جميع الحقوق محفوظة</p>
+    </footer>
 
-    // إظهار النص عند الضغط
-    btnReveal.addEventListener('click', () => {
-        btnReveal.style.display = 'none';
-        hiddenPart.style.display = 'block';
-    });
+    <!-- JavaScript للفلترة التفاعلية -->
+    <script>
+        function filterMenu(category) {
+            // تحديث حالة الأزرار
+            const buttons = document.querySelectorAll('.category-btn');
+            buttons.forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
 
-    // هروب زر لا
-    noBtn.addEventListener('mouseover', () => {
-        noBtn.style.position = 'fixed';
-        noBtn.style.left = Math.random() * (window.innerWidth - 100) + 'px';
-        noBtn.style.top = Math.random() * (window.innerHeight - 100) + 'px';
-    });
-
-    // عند الضغط على نعم
-    yesBtn.addEventListener('click', () => {
-        mainCard.innerHTML = '<h1 style="color: #d81b60;">بحبك ! ❤️</h1>';
-    });
-</script>
-
+            // تصفية العناصر
+            const cards = document.querySelectorAll('.menu-card');
+            cards.forEach(card => {
+                if (category === 'all' || card.dataset.category === category) {
+                    card.style.display = 'flex';
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+        }
+    </script>
 </body>
 </html>
