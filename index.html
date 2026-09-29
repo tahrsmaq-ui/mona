@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منيو مطعم النكهة الشهية</title>
-    <meta name="description" content="قائمة طعام مطعم النكهة الشهية - أشهى الوجبات المشوية، المقبلات، والمشروبات الطازجة.">
+    <title>منيو مطعم الزين - وجبات غربية وشاورما</title>
+    <meta name="description" content="قائمة طعام مطعم الزين - أشهى الوجبات الغربية والشاورما على أصولها، برغر، بيتزا، وسندويشات طازجة.">
     
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
@@ -14,21 +14,33 @@
     {
       "@context": "https://schema.org",
       "@type": "Restaurant",
-      "name": "مطعم النكهة الشهية",
-      "image": "https://via.placeholder.com/1200x630",
+      "name": "مطعم الزين",
+      "servesCuisine": ["وجبات غربية", "شاورما"],
       "hasMenu": {
         "@type": "Menu",
         "name": "القائمة الرئيسية",
         "hasMenuSection": [
           {
             "@type": "MenuSection",
-            "name": "الوجبات الرئيسية",
+            "name": "الشاورما",
             "hasMenuItem": [
               {
                 "@type": "MenuItem",
-                "name": "برغر لحم ديلوكس",
+                "name": "وجبة شاورما عربي دجاج",
+                "description": "شاورما دجاج ممتازة مع ثوم، مخلل، وبطاطس",
+                "offers": { "@type": "Offer", "price": "4.50", "priceCurrency": "USD" }
+              }
+            ]
+          },
+          {
+            "@type": "MenuSection",
+            "name": "الوجبات الغربية",
+            "hasMenuItem": [
+              {
+                "@type": "MenuItem",
+                "name": "برغر الزين ديلوكس",
                 "description": "لحم بقر طازج مع جبنة شيدر وصلصة خاصة",
-                "offers": { "@type": "Offer", "price": "8.50", "priceCurrency": "USD" }
+                "offers": { "@type": "Offer", "price": "6.00", "priceCurrency": "USD" }
               }
             ]
           }
@@ -39,11 +51,11 @@
 
     <style>
         :root {
-            --primary-color: #e63946;
+            --primary-color: #d90429;
+            --accent-color: #ffb703;
             --bg-color: #f8f9fa;
             --card-bg: #ffffff;
             --text-color: #2b2d42;
-            --accent-color: #f1faee;
         }
 
         * {
@@ -60,20 +72,21 @@
         }
 
         header {
-            background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=800') center/cover;
+            background: linear-gradient(rgba(0,0,0,0.65), rgba(0,0,0,0.65)), url('https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=800') center/cover;
             color: white;
             text-align: center;
             padding: 50px 20px;
         }
 
         header h1 {
-            font-size: 2.2rem;
+            font-size: 2.3rem;
             margin-bottom: 8px;
+            color: var(--accent-color);
         }
 
         header p {
-            font-size: 1rem;
-            opacity: 0.9;
+            font-size: 1.05rem;
+            opacity: 0.95;
         }
 
         /* Nav Categories Filter */
@@ -81,7 +94,7 @@
             display: flex;
             justify-content: center;
             gap: 10px;
-            padding: 20px 10px;
+            padding: 15px 10px;
             background-color: var(--card-bg);
             position: sticky;
             top: 0;
@@ -92,7 +105,7 @@
 
         .category-btn {
             border: none;
-            background: #eee;
+            background: #edf2f4;
             color: var(--text-color);
             padding: 8px 18px;
             border-radius: 20px;
@@ -116,7 +129,7 @@
 
         .menu-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
             gap: 20px;
         }
 
@@ -161,7 +174,7 @@
         }
 
         .item-price {
-            background-color: #fff3f3;
+            background-color: #ffe5e5;
             color: var(--primary-color);
             font-weight: 700;
             padding: 4px 10px;
@@ -186,15 +199,16 @@
 <body>
 
     <header>
-        <h1>مطعم النكهة الشهية</h1>
-        <p>أطيب الوجبات الشرقية والغربية أونلاين</p>
+        <h1>مطعم الزين</h1>
+        <p>أطيب الوجبات الغربية والشاورما على أصولها</p>
     </header>
 
     <!-- أزرار التصنيفات -->
     <nav class="categories-nav">
         <button class="category-btn active" onclick="filterMenu('all')">الكل</button>
-        <button class="category-btn" onclick="filterMenu('mains')">الوجبات الرئيسية</button>
-        <button class="category-btn" onclick="filterMenu('appetizers')">المقبلات</button>
+        <button class="category-btn" onclick="filterMenu('shawarma')">الشاورما</button>
+        <button class="category-btn" onclick="filterMenu('western')">الوجبات الغربية</button>
+        <button class="category-btn" onclick="filterMenu('appetizers')">المقبلات والجانبيات</button>
         <button class="category-btn" onclick="filterMenu('drinks')">المشروبات</button>
     </nav>
 
@@ -202,51 +216,84 @@
     <div class="container">
         <div class="menu-grid" id="menuContainer">
 
-            <!-- عنصر 1 -->
-            <div class="menu-card" data-category="mains">
-                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500" alt="برغر ديلوكس" class="card-img">
+            <!-- الشاورما -->
+            <div class="menu-card" data-category="shawarma">
+                <img src="https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=500" alt="وجبة شاورما عربي" class="card-img">
                 <div class="card-body">
                     <div class="card-header">
-                        <span class="item-title">برغر لحم ديلوكس</span>
-                        <span class="item-price">$8.50</span>
+                        <span class="item-title">وجبة شاورما عربي دجاج</span>
+                        <span class="item-price">$4.50</span>
                     </div>
-                    <p class="item-desc">شريحة لحم بقر طازجة مع جبنة الشيدر، الخس، الطماطم وصلصة البيت الخاصة.</p>
+                    <p class="item-desc">شرائح الشاورما المتبلة، مقطعة مع كريم الثوم والمخلل، تقدم مع البطاطس المقلية.</p>
                 </div>
             </div>
 
-            <!-- عنصر 2 -->
-            <div class="menu-card" data-category="mains">
-                <img src="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=500" alt="بيتزا مارجريتا" class="card-img">
+            <div class="menu-card" data-category="shawarma">
+                <img src="https://images.unsplash.com/photo-1662116765994-1e222510f2a9?w=500" alt="سندويش شاورما سوبر" class="card-img">
                 <div class="card-body">
                     <div class="card-header">
-                        <span class="item-title">بيتزا مارجريتا</span>
-                        <span class="item-price">$10.00</span>
-                    </div>
-                    <p class="item-desc">عجينة إيطالية هشة، صلصة طماطم معتقة، جبنة موزاريلا طازجة وأوراق الريحان.</p>
-                </div>
-            </div>
-
-            <!-- عنصر 3 -->
-            <div class="menu-card" data-category="appetizers">
-                <img src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=500" alt="بطاطس مقرمشة" class="card-img">
-                <div class="card-body">
-                    <div class="card-header">
-                        <span class="item-title">بطاطس مقلية بالبهارات</span>
-                        <span class="item-price">$3.50</span>
-                    </div>
-                    <p class="item-desc">أصابع البطاطس المقرمشة مغطاة بتتبيلة الأعشاب والبهارات الخاصة.</p>
-                </div>
-            </div>
-
-            <!-- عنصر 4 -->
-            <div class="menu-card" data-category="drinks">
-                <img src="https://images.unsplash.com/photo-1513558161293-cdaf765ed2fd?w=500" alt="عصير برتقال" class="card-img">
-                <div class="card-body">
-                    <div class="card-header">
-                        <span class="item-title">عصير برتقال طازج</span>
+                        <span class="item-title">سندويش شاورما دجاج سوبر</span>
                         <span class="item-price">$2.50</span>
                     </div>
-                    <p class="item-desc">عصير برتقال طبيعي 100% معصور طازج عند الطلب بدون إضافة سكر.</p>
+                    <p class="item-desc">خبز صاج طازج محشي بشاورما الدجاج الممتازة مع الثومية والمخلل المحمّص على الجريل.</p>
+                </div>
+            </div>
+
+            <!-- الوجبات الغربية -->
+            <div class="menu-card" data-category="western">
+                <img src="https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500" alt="برغر الزين ديلوكس" class="card-img">
+                <div class="card-body">
+                    <div class="card-header">
+                        <span class="item-title">برغر الزين ديلوكس</span>
+                        <span class="item-price">$6.00</span>
+                    </div>
+                    <p class="item-desc">شريحة لحم بقر طازجة مع جبنة الشيدر الذائبة، الخس، الطماطم وصلصة الزين الخاصة.</p>
+                </div>
+            </div>
+
+            <div class="menu-card" data-category="western">
+                <img src="https://images.unsplash.com/photo-1628840042765-356cda07504e?w=500" alt="بيتزا بيبروني" class="card-img">
+                <div class="card-body">
+                    <div class="card-header">
+                        <span class="item-title">بيتزا بيبروني إيطالية</span>
+                        <span class="item-price">$8.00</span>
+                    </div>
+                    <p class="item-desc">عجينة هشة مع صلصة الطماطم المعتقة، جبنة الموزاريلا وشرائح البيبروني البقري.</p>
+                </div>
+            </div>
+
+            <div class="menu-card" data-category="western">
+                <img src="https://images.unsplash.com/photo-1562967914-608f82629710?w=500" alt="وجبة بروستد دجاج" class="card-img">
+                <div class="card-body">
+                    <div class="card-header">
+                        <span class="item-title">وجبة كريسبي دجاج</span>
+                        <span class="item-price">$5.50</span>
+                    </div>
+                    <p class="item-desc">قطع دجاج مقرمشة بتتبيلة حارة أو العادية، تقدم مع صوص المايونيز والبطاطس.</p>
+                </div>
+            </div>
+
+            <!-- المقبلات -->
+            <div class="menu-card" data-category="appetizers">
+                <img src="https://images.unsplash.com/photo-1573080496219-bb080dd4f877?w=500" alt="بطاطس بالجبنة" class="card-img">
+                <div class="card-body">
+                    <div class="card-header">
+                        <span class="item-title">بطاطس مقلية بالجبنة</span>
+                        <span class="item-price">$3.00</span>
+                    </div>
+                    <p class="item-desc">أصابع البطاطس الذهبية المقرمشة المغطاة بجبنة الشيدر الساخنة.</p>
+                </div>
+            </div>
+
+            <!-- المشروبات -->
+            <div class="menu-card" data-category="drinks">
+                <img src="https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=500" alt="مشروبات غازية" class="card-img">
+                <div class="card-body">
+                    <div class="card-header">
+                        <span class="item-title">مشروب غازي بارد</span>
+                        <span class="item-price">$1.00</span>
+                    </div>
+                    <p class="item-desc">كولا / بيبسي / سفن أب / ميرندا باردة جداً.</p>
                 </div>
             </div>
 
@@ -254,18 +301,16 @@
     </div>
 
     <footer>
-        <p>© 2026 مطعم النكهة الشهية - جميع الحقوق محفوظة</p>
+        <p>© 2026 مطعم الزين - جميع الحقوق محفوظة</p>
     </footer>
 
     <!-- JavaScript للفلترة التفاعلية -->
     <script>
         function filterMenu(category) {
-            // تحديث حالة الأزرار
             const buttons = document.querySelectorAll('.category-btn');
             buttons.forEach(btn => btn.classList.remove('active'));
             event.target.classList.add('active');
 
-            // تصفية العناصر
             const cards = document.querySelectorAll('.menu-card');
             cards.forEach(card => {
                 if (category === 'all' || card.dataset.category === category) {
