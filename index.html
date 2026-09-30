@@ -21,14 +21,14 @@
       padding-bottom: 40px;
     }
 
-    /* تنسيق الهيدر مع صورة اللوجو كخلفية شفافة */
+    /* الهيدر واللوجو */
     .header {
-      background-image: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), url('images/logo.png');
+      background-image: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), url('images/logo.jpg');
       background-size: cover;
       background-position: center;
       background-repeat: no-repeat;
       text-align: center;
-      padding: 40px 20px;
+      padding: 35px 20px;
       border-bottom: 2px solid #ff9800;
     }
 
@@ -55,7 +55,7 @@
       font-size: 0.95rem;
     }
 
-    /* أزرار التصنيفات */
+    /* أزرار التصفية */
     .categories {
       display: flex;
       justify-content: center;
@@ -68,7 +68,7 @@
       background-color: #1e293b;
       color: #94a3b8;
       border: 1px solid #334155;
-      padding: 8px 18px;
+      padding: 8px 20px;
       border-radius: 20px;
       cursor: pointer;
       font-weight: bold;
@@ -81,7 +81,7 @@
       border-color: #ff9800;
     }
 
-    /* شبكة البطاقات */
+    /* شبكة عرض البطاقات */
     .container {
       max-width: 1200px;
       margin: 0 auto;
@@ -94,7 +94,7 @@
       gap: 20px;
     }
 
-    /* بطاقة الوجبة */
+    /* البطاقة */
     .card {
       background-color: #1e293b;
       border-radius: 12px;
@@ -110,6 +110,7 @@
       position: relative;
       width: 100%;
       height: 190px;
+      background-color: #0f172a;
     }
 
     .card-img {
@@ -148,7 +149,7 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.4);
     }
 
-    /* محتوى البطاقة والزر */
+    /* تفاصيل البطاقة وزر الواتساب */
     .card-body {
       padding: 16px;
       display: flex;
@@ -191,70 +192,90 @@
 </head>
 <body>
 
-  <!-- قسم الهيدر باللوجو والاسم -->
+  <!-- الهيدر -->
   <header class="header">
     <div class="logo-wrapper">
-      <img src="images/logo.png" alt="شاورما الزين" class="main-logo" onerror="this.style.display='none'">
+      <img src="images/logo.jpg" alt="شاورما الزين" class="main-logo" onerror="this.style.display='none'">
     </div>
     <h1>شاورما الزين</h1>
     <p>أطيب الوجبات الغربية والشاورما - اضغط للطلب مباشرة عبر الواتساب</p>
   </header>
 
-  <!-- أزرار التصفية (Categories) -->
+  <!-- أزرار الفئات -->
   <nav class="categories">
     <button class="cat-btn active" onclick="filterMenu('all')">الكل</button>
     <button class="cat-btn" onclick="filterMenu('meals')">الوجبات</button>
     <button class="cat-btn" onclick="filterMenu('sandwiches')">السندويش</button>
   </nav>
 
-  <!-- حاوية عرض المنيو -->
+  <!-- حاوية المنتجات -->
   <main class="container">
     <div id="menu-container" class="menu-grid"></div>
   </main>
 
   <script>
     let fullMenuData = [];
+    const sheetUrl = 'https://docs.google.com/spreadsheets/d/1AwuHd2YCOUpzJKTbj70x_8B-MuzFWGkRTvcL2YRlxdE/gviz/tq?tqx=out:csv';
+    const phoneNumber = "963995829459"; // رقم الواتساب المعتمد
 
-    // تحميل البيانات من ملف CSV
+    // جلب البيانات مباشرة من Google Sheets
     async function fetchMenuData() {
       try {
-        const response = await fetch('menu_data.csv');
+        const response = await fetch(sheetUrl);
         const data = await response.text();
         fullMenuData = parseCSV(data);
         renderMenuItems(fullMenuData);
       } catch (error) {
-        console.error('حدث خطأ أثناء تحميل البيانات:', error);
+        console.error('حدث خطأ أثناء تحميل البيانات من Google Sheets:', error);
       }
     }
 
-    // تحويل ملف CSV إلى مصفوفة كائنات
+    // تحليل نص CSV مع إزالة الاقتباسات وحل مشكلة undefined
     function parseCSV(csvText) {
-      const lines = csvText.trim().split('\n');
-      const headers = lines[0].split(',').map(h => h.trim());
+      const cleanText = csvText.replace(/^\uFEFF/, '');
+      const lines = cleanText.trim().split(/\r?\n/).filter(line => line.trim() !== '');
+      if (lines.length < 2) return [];
+
+      const delimiter = lines[0].includes(';') ? ';' : ',';
       
+      // استخراج وتنظيف عناوين الأعمدة
+      const headers = lines[0].split(delimiter).map(h => h.trim().replace(/^"|"$/g, '').toLowerCase());
+
       return lines.slice(1).map(line => {
-        const values = line.split(',').map(v => v.trim());
+        // تفكيك السطر المقتبس
+        const regex = new RegExp(`(?:^|${delimiter})(?:"([^"]*)"|([^"${delimiter}]*))`, 'g');
+        let values = [];
+        let match;
+        while ((match = regex.exec(line)) !== null) {
+          let val = match[1] !== undefined ? match[1] : match[2];
+          values.push(val ? val.trim() : '');
+        }
+
         let item = {};
         headers.forEach((header, index) => {
-          item[header] = values[index] || '';
+          item[header] = values[index] !== undefined ? values[index] : '';
         });
-        return item;
+
+        return {
+          title: item.title || item['عنوان'] || '',
+          price_try: item.price_try || item.price || '0',
+          price_s: item.price_s || item.price_syp || '0',
+          category: item.category || 'meals',
+          description: item.description || '',
+          image: item.image || ''
+        };
       });
     }
 
-    // دالة عرض عناصر المنيو
+    // رسم عناصر المنيو
     function renderMenuItems(menuData) {
       const container = document.getElementById('menu-container');
       if (!container) return;
 
-      const phoneNumber = "963995829459"; // رقم واتساب المطعم[span_0](start_span)[span_0](end_span)
-
       container.innerHTML = menuData.map(item => {
-        // 1. تحديد مسار الصورة مع صورة افتراضية
         const imageName = item.image ? item.image.trim() : '';
         const imagePath = imageName ? `images/${imageName}` : 'images/default.jpg';
 
-        // 2. تجهيز رابط الواتساب
         const whatsappText = encodeURIComponent(`مرحبا، أرغب بطلب: ${item.title}`);
         const whatsappUrl = `https://wa.me/${phoneNumber}?text=${whatsappText}`;
 
@@ -263,7 +284,6 @@
             <div class="card-img-container">
               <img src="${imagePath}" alt="${item.title}" class="card-img" onerror="this.src='images/default.jpg'">
               
-              <!-- عرض الأسعار بالتركية والسورية -->
               <div class="price-badges">
                 <span class="badge-try">${item.price_try} TL</span>
                 <span class="badge-syp">${item.price_s} S</span>
@@ -273,8 +293,7 @@
             <div class="card-body">
               <h3 class="card-title">${item.title}</h3>
               
-              <!-- عرض الوصف الصحيح -->
-              <p class="card-description">${item.description || ''}</p>
+              <p class="card-description">${item.description}</p>
               
               <a href="${whatsappUrl}" class="whatsapp-btn" target="_blank" rel="noopener noreferrer">
                 <i class="fab fa-whatsapp"></i> طلب عبر واتساب
@@ -285,11 +304,11 @@
       }).join('');
     }
 
-    // دالة تصفية المنيو حسب الفئة
+    // تصفية الفئات
     function filterMenu(category) {
       document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
-      if (event && event.target) {
-        event.target.classList.add('active');
+      if (window.event && window.event.target) {
+        window.event.target.classList.add('active');
       }
 
       if (category === 'all') {
@@ -300,7 +319,6 @@
       }
     }
 
-    // تشغيل التابع عند فتح الصفحة
     document.addEventListener('DOMContentLoaded', fetchMenuData);
   </script>
 </body>
