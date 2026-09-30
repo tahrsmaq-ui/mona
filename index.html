@@ -275,9 +275,8 @@
         const imageName = item.image ? item.image.trim() : '';
         const imagePath = imageName ? `images/${imageName}` : 'images/default.jpg';
 
-        const whatsappText = encodeURIComponent(`مرحبا، أرغب بطلب: ${item.title}`);
-        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${whatsappText}`;
-
+    const whatsappText = encodeURIComponent(`مرحبا، أرغب بطلب: ${item.title} (السعر: ${item.price_try} TL / ${item.price_s} S)`);
+const whatsappUrl = `https://wa.me/${phoneNumber}?text=${whatsappText}`;
         return `
           <div class="card">
             <div class="card-img-container">
