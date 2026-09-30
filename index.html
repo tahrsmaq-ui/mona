@@ -153,25 +153,39 @@
         // ضع ID الخاص بجدول Google Sheets هنا لو أردت الربط مستقبلاً
 // الربط المباشر المحدث لـ Google Sheets
 const SHEET_ID = '1AwuHd2YCOUpzJKTbj70x_8B-MuzFWGkRTvcL2YRlxdE';
-const SHEET_URL = `https://opensheet.elk.sh/${SHEET_ID}/sheet1?nocache=${Date.now()}`;
+
+// جلب البيانات مباشرة من سيرفر جوجل بدون وسيط وبدون كاش
+const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&t=${Date.now()}`;
+
 async function initMenu() {
-  if (SHEET_ID) {
-    try {
-      const response = await fetch(SHEET_URL);
-      const data = await response.json();
-      if (Array.isArray(data) && data.length > 0) {
-        // تحديث القائمة بالبيانات الحقيقية القادمة من جوجل شيت
-        currentItems = data;
-        renderMenu(currentItems);
-      }
-    } catch (error) {
-      console.log("تعذر جلب البيانات من Google Sheets", error);
+  if (!SHEET_ID) return;
+  
+  try {
+    const response = await fetch(SHEET_URL);
+    const text = await response.text();
+    
+    // استخراج بيانات JSON المرجعة من جوجل
+    const jsonData = JSON.parse(text.substring(47, text.length - 2));
+    const rows = jsonData.table.rows;
+    
+    if (rows && rows.length > 0) {
+      const items = rows.map(row => ({
+        title: row.c[0] ? row.c[0].v : '',
+        price: row.c[1] ? row.c[1].v : '',
+        category: row.c[2] ? row.c[2].v : '',
+        description: row.c[3] ? row.c[3].v : '',
+        image: row.c[4] ? row.c[4].v : ''
+      }));
+      
+      currentItems = items;
+      renderMenu(currentItems);
     }
+  } catch (error) {
+    console.error("خطأ في جلب البيانات المباشرة:", error);
   }
 }
 
-// تشغيل جلب البيانات فور فتح الصفحة
-initMenu();                }
+initMenu();          }
             }
             renderMenu(currentItems);
         }
