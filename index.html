@@ -3,9 +3,191 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ماكولات الزين - شاورما</title>
-  <link rel="stylesheet" href="style.css">
+  <title>مأكولات الزين - شاورما</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    }
+
+    body {
+      background-color: #0f172a;
+      color: #f8fafc;
+      direction: rtl;
+      padding-bottom: 40px;
+    }
+
+    /* تنسيق الهيدر مع صورة اللوجو كخلفية شفافة */
+    .header {
+      background-image: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), url('images/logo.png');
+      background-size: cover;
+      background-position: center;
+      background-repeat: no-repeat;
+      text-align: center;
+      padding: 40px 20px;
+      border-bottom: 2px solid #ff9800;
+    }
+
+    .logo-wrapper {
+      margin-bottom: 12px;
+    }
+
+    .main-logo {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      border: 2px solid #ff9800;
+      object-fit: cover;
+    }
+
+    .header h1 {
+      color: #ff9800;
+      font-size: 2rem;
+      margin-bottom: 8px;
+    }
+
+    .header p {
+      color: #94a3b8;
+      font-size: 0.95rem;
+    }
+
+    /* أزرار التصنيفات */
+    .categories {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      padding: 20px 10px;
+      flex-wrap: wrap;
+    }
+
+    .cat-btn {
+      background-color: #1e293b;
+      color: #94a3b8;
+      border: 1px solid #334155;
+      padding: 8px 18px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .cat-btn.active, .cat-btn:hover {
+      background-color: #ff9800;
+      color: #0f172a;
+      border-color: #ff9800;
+    }
+
+    /* شبكة البطاقات */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 15px;
+    }
+
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    /* بطاقة الوجبة */
+    .card {
+      background-color: #1e293b;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid #334155;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    }
+
+    .card-img-container {
+      position: relative;
+      width: 100%;
+      height: 190px;
+    }
+
+    .card-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* شارات الأسعار فوق الصورة */
+    .price-badges {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      display: flex;
+      gap: 6px;
+      z-index: 2;
+    }
+
+    .badge-try {
+      background-color: #ff9800;
+      color: #0f172a;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 0.85rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    }
+
+    .badge-syp {
+      background-color: #2196f3;
+      color: #ffffff;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 0.85rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.4);
+    }
+
+    /* محتوى البطاقة والزر */
+    .card-body {
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+      justify-content: space-between;
+    }
+
+    .card-title {
+      color: #f8fafc;
+      font-size: 1.2rem;
+      margin-bottom: 8px;
+    }
+
+    .card-description {
+      color: #94a3b8;
+      font-size: 0.88rem;
+      line-height: 1.5;
+      margin-bottom: 16px;
+      flex-grow: 1;
+    }
+
+    .whatsapp-btn {
+      display: block;
+      width: 100%;
+      padding: 10px;
+      background-color: #25d366;
+      color: white;
+      text-align: center;
+      border-radius: 8px;
+      text-decoration: none;
+      font-weight: bold;
+      transition: background 0.2s ease;
+    }
+
+    .whatsapp-btn:hover {
+      background-color: #128c7e;
+    }
+  </style>
 </head>
 <body>
 
@@ -30,6 +212,96 @@
     <div id="menu-container" class="menu-grid"></div>
   </main>
 
-  <script src="script.js"></script>
+  <script>
+    let fullMenuData = [];
+
+    // تحميل البيانات من ملف CSV
+    async function fetchMenuData() {
+      try {
+        const response = await fetch('menu_data.csv');
+        const data = await response.text();
+        fullMenuData = parseCSV(data);
+        renderMenuItems(fullMenuData);
+      } catch (error) {
+        console.error('حدث خطأ أثناء تحميل البيانات:', error);
+      }
+    }
+
+    // تحويل ملف CSV إلى مصفوفة كائنات
+    function parseCSV(csvText) {
+      const lines = csvText.trim().split('\n');
+      const headers = lines[0].split(',').map(h => h.trim());
+      
+      return lines.slice(1).map(line => {
+        const values = line.split(',').map(v => v.trim());
+        let item = {};
+        headers.forEach((header, index) => {
+          item[header] = values[index] || '';
+        });
+        return item;
+      });
+    }
+
+    // دالة عرض عناصر المنيو
+    function renderMenuItems(menuData) {
+      const container = document.getElementById('menu-container');
+      if (!container) return;
+
+      const phoneNumber = "963995829459"; // رقم واتساب المطعم[span_0](start_span)[span_0](end_span)
+
+      container.innerHTML = menuData.map(item => {
+        // 1. تحديد مسار الصورة مع صورة افتراضية
+        const imageName = item.image ? item.image.trim() : '';
+        const imagePath = imageName ? `images/${imageName}` : 'images/default.jpg';
+
+        // 2. تجهيز رابط الواتساب
+        const whatsappText = encodeURIComponent(`مرحبا، أرغب بطلب: ${item.title}`);
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${whatsappText}`;
+
+        return `
+          <div class="card">
+            <div class="card-img-container">
+              <img src="${imagePath}" alt="${item.title}" class="card-img" onerror="this.src='images/default.jpg'">
+              
+              <!-- عرض الأسعار بالتركية والسورية -->
+              <div class="price-badges">
+                <span class="badge-try">${item.price_try} TL</span>
+                <span class="badge-syp">${item.price_s} S</span>
+              </div>
+            </div>
+            
+            <div class="card-body">
+              <h3 class="card-title">${item.title}</h3>
+              
+              <!-- عرض الوصف الصحيح -->
+              <p class="card-description">${item.description || ''}</p>
+              
+              <a href="${whatsappUrl}" class="whatsapp-btn" target="_blank" rel="noopener noreferrer">
+                <i class="fab fa-whatsapp"></i> طلب عبر واتساب
+              </a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // دالة تصفية المنيو حسب الفئة
+    function filterMenu(category) {
+      document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
+      if (event && event.target) {
+        event.target.classList.add('active');
+      }
+
+      if (category === 'all') {
+        renderMenuItems(fullMenuData);
+      } else {
+        const filtered = fullMenuData.filter(item => item.category && item.category.trim().toLowerCase() === category.toLowerCase());
+        renderMenuItems(filtered);
+      }
+    }
+
+    // تشغيل التابع عند فتح الصفحة
+    document.addEventListener('DOMContentLoaded', fetchMenuData);
+  </script>
 </body>
 </html>
