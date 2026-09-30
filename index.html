@@ -151,20 +151,28 @@
         ];
 
         // ضع ID الخاص بجدول Google Sheets هنا لو أردت الربط مستقبلاً
-     const SHEET_ID = '1AwuHd2YCOUpzJKTbj70x_8B-MuzFWGkRTvcL2YRlxdE';
-     const SHEET_URL = `https://opensheet.elk.sh/${SHEET_ID}/Sheet1?nocache=${Date.now()}`;
+// الربط المباشر المحدث لـ Google Sheets
+const SHEET_ID = '1AwuHd2YCOUpzJKTbj70x_8B-MuzFWGkRTvcL2YRlxdE';
+const SHEET_URL = `https://opensheet.elk.sh/${SHEET_ID}/Sheet1?nocache=${Date.now()}`;
 
-        let currentItems = [...initialMenuItems];
+async function initMenu() {
+  if (SHEET_ID) {
+    try {
+      const response = await fetch(SHEET_URL);
+      const data = await response.json();
+      if (Array.isArray(data) && data.length > 0) {
+        // تحديث القائمة بالبيانات الحقيقية القادمة من جوجل شيت
+        currentItems = data;
+        renderMenu(currentItems);
+      }
+    } catch (error) {
+      console.log("تعذر جلب البيانات من Google Sheets", error);
+    }
+  }
+}
 
-        async function initMenu() {
-            if (SHEET_ID && SHEET_ID !== 'ضع_هنا_SHEET_ID_الخاص_بجدولك') {
-                try {
-                    const response = await fetch(SHEET_URL);
-                    const data = await response.json();
-                    if (data && data.length > 0) currentItems = data;
-                } catch (error) {
-                    console.log("تعذر جلب البيانات من Google Sheets، سيتم عرض الأصناف التجريبية.");
-                }
+// تشغيل جلب البيانات فور فتح الصفحة
+initMenu();                }
             }
             renderMenu(currentItems);
         }
