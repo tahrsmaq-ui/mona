@@ -1,165 +1,35 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>منيو شاورما الزين</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Tajawal', sans-serif; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ماكولات الزين - شاورما</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
-<body class="bg-slate-900 text-white min-h-screen pb-12">
+<body>
 
-    <!-- Header Section -->
-    <header class="text-center py-8 px-4 border-b border-slate-800 bg-slate-950/70 backdrop-blur-md sticky top-0 z-50">
-        <div class="max-w-4xl mx-auto flex flex-col items-center gap-3">
-            <!-- Logo Container -->
-            <div class="w-24 h-24 bg-slate-900 border-2 border-amber-500 rounded-full flex flex-col items-center justify-center p-2 shadow-xl shadow-amber-500/10">
-                <span class="text-xs text-red-500 font-bold tracking-widest leading-none">مأكولات</span>
-                <span class="text-2xl font-black text-amber-400 my-0.5">الزين</span>
-                <span class="text-[10px] text-slate-300 font-medium leading-none">شاورما</span>
-            </div>
-            
-            <h1 class="text-3xl md:text-4xl font-black text-amber-400">شاورما الزين</h1>
-            <p class="text-slate-400 text-sm md:text-base">أطيب الوجبات الغربية والشاورما - اضغط للطلب مباشرة عبر الواتساب</p>
-        </div>
-    </header>
+  <!-- قسم الهيدر باللوجو والاسم -->
+  <header class="header">
+    <div class="logo-wrapper">
+      <img src="images/logo.png" alt="شاورما الزين" class="main-logo" onerror="this.style.display='none'">
+    </div>
+    <h1>شاورما الزين</h1>
+    <p>أطيب الوجبات الغربية والشاورما - اضغط للطلب مباشرة عبر الواتساب</p>
+  </header>
 
-    <!-- Category Filters -->
-    <main class="max-w-6xl mx-auto px-4 mt-6">
-        <div class="flex justify-center gap-2 md:gap-4 mb-8 overflow-x-auto py-2 no-scrollbar">
-            <button onclick="filterCategory('all')" class="cat-btn active bg-amber-500 text-slate-950 font-bold px-6 py-2.5 rounded-full text-sm transition-all shadow-lg shadow-amber-500/20">الكل</button>
-            <button onclick="filterCategory('shawarma')" class="cat-btn bg-slate-800 text-slate-300 font-medium px-6 py-2.5 rounded-full text-sm transition-all hover:bg-slate-700">الشاورما</button>
-            <button onclick="filterCategory('western')" class="cat-btn bg-slate-800 text-slate-300 font-medium px-6 py-2.5 rounded-full text-sm transition-all hover:bg-slate-700">الوجبات الغربية</button>
-            <button onclick="filterCategory('drinks')" class="cat-btn bg-slate-800 text-slate-300 font-medium px-6 py-2.5 rounded-full text-sm transition-all hover:bg-slate-700">المشروبات</button>
-        </div>
+  <!-- أزرار التصفية (Categories) -->
+  <nav class="categories">
+    <button class="cat-btn active" onclick="filterMenu('all')">الكل</button>
+    <button class="cat-btn" onclick="filterMenu('meals')">الوجبات</button>
+    <button class="cat-btn" onclick="filterMenu('sandwiches')">السندويش</button>
+  </nav>
 
-        <!-- Menu Items Grid -->
-        <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            <!-- Loading Indicator -->
-            <div class="col-span-full text-center py-16 text-slate-400">
-                <div class="inline-block animate-spin rounded-full h-10 w-10 border-t-2 border-b-2 border-amber-500 mb-3"></div>
-                <p class="text-lg">جاري تحميل قائمة الطعام...</p>
-            </div>
-        </div>
-    </main>
+  <!-- حاوية عرض المنيو -->
+  <main class="container">
+    <div id="menu-container" class="menu-grid"></div>
+  </main>
 
-    <script>
-        const SHEET_ID = '1AwuHd2YCOUpzJKTbj70x_8B-MuzFWGkRTvcL2YRlxdE';
-        const PHONE_NUMBER = '963995829459'; // رقم الواتساب المباشر للمطعم
-        let currentItems = [];
-        let activeCategory = 'all';
-
-        // دالة جلب البيانات المباشرة من Google Sheets
-        async function fetchMenuData() {
-            if (!SHEET_ID) return;
-
-            // رابط جلب البيانات المباشر لمنع التخزين المؤقت (No-Cache)
-            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&t=${Date.now()}`;
-
-            try {
-                const response = await fetch(url);
-                const text = await response.text();
-                
-                // تحويل استجابة Google إلى JSON
-                const jsonData = JSON.parse(text.substring(47, text.length - 2));
-                const rows = jsonData.table.rows;
-
-                if (rows && rows.length > 0) {
-                    // تجاهل الصف الأول (العناوين الهيدر)
-                    const dataRows = rows.slice(1);
-
-                    currentItems = dataRows.map(row => {
-                        return {
-                            title: row.c[0] ? String(row.c[0].v || '') : '',
-                            price: row.c[1] ? String(row.c[1].v || '') : '',
-                            category: row.c[2] ? String(row.c[2].v || '').toLowerCase().trim() : 'shawarma',
-                            description: row.c[3] ? String(row.c[3].v || '') : '',
-                            image: row.c[4] ? String(row.c[4].v || '') : 'https://images.unsplash.com/photo-1561651823-34feb02250e4'
-                        };
-                    }).filter(item => item.title.trim() !== '' && item.title.trim().toLowerCase() !== 'title');
-
-                    renderMenu();
-                } else {
-                    showEmptyMessage();
-                }
-            } catch (error) {
-                console.error("خطأ في جلب البيانات:", error);
-                showErrorMessage();
-            }
-        }
-
-        // دالة عرض عناصر المنيو
-        function renderMenu() {
-            const grid = document.getElementById('menu-grid');
-            
-            const filteredItems = activeCategory === 'all' 
-                ? currentItems 
-                : currentItems.filter(item => item.category === activeCategory);
-
-            if (filteredItems.length === 0) {
-                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500 text-lg">لا توجد أصناف متوفرة في هذا القسم حالياً.</div>`;
-                return;
-            }
-
-            grid.innerHTML = filteredItems.map(item => {
-                const whatsappMsg = encodeURIComponent(`مرحباً شاورما الزين 👋، أرغب بطلب:\n- ${item.title}\n- السعر: ${item.price}`);
-                const whatsappUrl = `https://wa.me/${PHONE_NUMBER}?text=${whatsappMsg}`;
-
-                return `
-                    <div class="bg-slate-800/80 rounded-2xl overflow-hidden border border-slate-700/60 shadow-xl flex flex-col justify-between hover:border-amber-500/50 transition-all duration-300">
-                        <div>
-                            <div class="h-52 overflow-hidden bg-slate-950 relative">
-                                <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1561651823-34feb02250e4'">
-                                <span class="absolute top-3 left-3 bg-amber-500 text-slate-950 font-bold px-3.5 py-1 rounded-full text-xs shadow-lg">
-                                    ${item.price}
-                                </span>
-                            </div>
-                            <div class="p-5">
-                                <h3 class="text-xl font-bold text-slate-100 mb-2">${item.title}</h3>
-                                <p class="text-slate-400 text-sm leading-relaxed">${item.description}</p>
-                            </div>
-                        </div>
-                        <div class="p-5 pt-0">
-                            <a href="${whatsappUrl}" target="_blank" class="w-full flex items-center justify-center gap-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl text-sm transition-colors shadow-lg shadow-emerald-600/20">
-                                <span>طلب عبر واتساب</span>
-                                <span>💬</span>
-                            </a>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        // دالة التصفية حسب الأقسام
-        function filterCategory(cat) {
-            activeCategory = cat;
-            
-            document.querySelectorAll('.cat-btn').forEach(btn => {
-                btn.classList.remove('bg-amber-500', 'text-slate-950', 'font-bold', 'shadow-lg', 'shadow-amber-500/20');
-                btn.classList.add('bg-slate-800', 'text-slate-300', 'font-medium');
-            });
-
-            event.currentTarget.classList.remove('bg-slate-800', 'text-slate-300', 'font-medium');
-            event.currentTarget.classList.add('bg-amber-500', 'text-slate-950', 'font-bold', 'shadow-lg', 'shadow-amber-500/20');
-
-            renderMenu();
-        }
-
-        function showEmptyMessage() {
-            document.getElementById('menu-grid').innerHTML = `<div class="col-span-full text-center py-12 text-slate-400">القائمة فارغة حالياً. أضف وجبات من جدول Google Sheets.</div>`;
-        }
-
-        function showErrorMessage() {
-            document.getElementById('menu-grid').innerHTML = `<div class="col-span-full text-center py-12 text-red-400">تعذر جلب البيانات. تأكد من أن Google Sheets متاح للعموم وبصلاحية 'Anyone with link'.</div>`;
-        }
-
-        // التشغيل التلقائي فور فتح الصفحة
-        document.addEventListener('DOMContentLoaded', fetchMenuData);
-    </script>
+  <script src="script.js"></script>
 </body>
 </html>
