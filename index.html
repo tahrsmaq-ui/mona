@@ -230,7 +230,7 @@
       }
     }
 
-    // تحليل نص CSV مع إزالة الاقتباسات وحل مشكلة undefined
+    // تحليل نص CSV وحل مشاكل المسافات والاقتباسات
     function parseCSV(csvText) {
       const cleanText = csvText.replace(/^\uFEFF/, '');
       const lines = cleanText.trim().split(/\r?\n/).filter(line => line.trim() !== '');
@@ -242,7 +242,6 @@
       const headers = lines[0].split(delimiter).map(h => h.trim().replace(/^"|"$/g, '').toLowerCase());
 
       return lines.slice(1).map(line => {
-        // تفكيك السطر المقتبس
         const regex = new RegExp(`(?:^|${delimiter})(?:"([^"]*)"|([^"${delimiter}]*))`, 'g');
         let values = [];
         let match;
@@ -304,7 +303,7 @@
       }).join('');
     }
 
-    // تصفية الفئات
+    // تصفية الفئات الذكية المحدثة لتشمل كل السندويشات والوجبات
     function filterMenu(category) {
       document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
       if (window.event && window.event.target) {
@@ -314,7 +313,17 @@
       if (category === 'all') {
         renderMenuItems(fullMenuData);
       } else {
-        const filtered = fullMenuData.filter(item => item.category && item.category.trim().toLowerCase() === category.toLowerCase());
+        const filtered = fullMenuData.filter(item => {
+          if (!item.category) return false;
+          const cat = item.category.trim().toLowerCase();
+          
+          if (category === 'meals') {
+            return cat.includes('meal');
+          } else if (category === 'sandwiches') {
+            return cat.includes('sandwich') || cat.includes('sand');
+          }
+          return cat === category.toLowerCase();
+        });
         renderMenuItems(filtered);
       }
     }
