@@ -4,237 +4,146 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>منيو شاورما الزين</title>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- FontAwesome للأيقونات -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@400;500;700;800&display=swap" rel="stylesheet">
     <style>
-        :root {
-            --primary-color: #d90429;
-            --whatsapp-color: #25d366;
-            --accent-color: #e2a138;
-            --bg-color: #f8f9fa;
-            --card-bg: #ffffff;
-            --text-color: #2b2d42;
-        }
-
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Cairo', sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-color); padding-bottom: 40px; }
-
-        /* Header Style مع اللوغو المصمم */
-        header {
-            background: linear-gradient(rgba(0,0,0,0.85), rgba(0,0,0,0.85)), url('https://images.unsplash.com/photo-1561758033-d89a9ad46330?w=800') center/cover;
-            color: white; text-align: center; padding: 35px 20px;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-        
-        .logo-container {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            background-color: #232220;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 3px solid var(--accent-color);
-            margin-bottom: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-        }
-
-        .logo-svg {
-            width: 90px;
-            height: 90px;
-        }
-
-        header h1 { font-size: 2.2rem; color: #ffffff; margin-bottom: 5px; font-weight: 700; }
-        header p { font-size: 0.95rem; opacity: 0.9; color: #ddd; }
-
-        .categories-nav {
-            display: flex; justify-content: center; gap: 10px; padding: 15px 10px;
-            background-color: var(--card-bg); position: sticky; top: 0; z-index: 100;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08); overflow-x: auto;
-        }
-        .category-btn {
-            border: none; background: #edf2f4; color: var(--text-color);
-            padding: 8px 18px; border-radius: 20px; font-weight: 600; cursor: pointer; white-space: nowrap;
-        }
-        .category-btn.active { background-color: var(--primary-color); color: white; }
-
-        .container { max-width: 800px; margin: 30px auto; padding: 0 15px; }
-        .menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 20px; }
-
-        .menu-card {
-            background-color: var(--card-bg); border-radius: 12px; overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.05); display: flex; flex-direction: column;
-            position: relative; transition: transform 0.2s;
-        }
-        .menu-card:hover { transform: translateY(-3px); }
-
-        .card-img { width: 100%; height: 180px; object-fit: cover; }
-        .card-body { padding: 16px; display: flex; flex-direction: column; justify-content: space-between; flex-grow: 1; }
-        .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
-        .item-title { font-size: 1.1rem; font-weight: 700; }
-        .item-price { background-color: #ffe5e5; color: var(--primary-color); font-weight: 700; padding: 4px 10px; border-radius: 8px; }
-        .item-desc { font-size: 0.88rem; color: #666; line-height: 1.4; margin-bottom: 15px; }
-
-        .whatsapp-btn {
-            display: flex; align-items: center; justify-content: center; gap: 8px;
-            background-color: var(--whatsapp-color); color: white; text-decoration: none;
-            padding: 10px; border-radius: 8px; font-weight: 700; font-size: 0.95rem;
-            transition: background 0.3s ease;
-        }
-        .whatsapp-btn:hover { background-color: #1ebd56; }
+        body { font-family: 'Tajawal', sans-serif; }
     </style>
 </head>
-<body>
+<body class="bg-slate-900 text-white min-h-screen pb-12">
 
-    <header>
-        <!-- اللوغو البرمجي SVG المدمج -->
-        <div class="logo-container">
-            <svg class="logo-svg" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
-                <path d="M 95,25 Q 100,10 105,25 Q 100,20 95,25 Z" fill="#d90429" />
-                <path d="M 90,32 C 85,15 115,15 110,32 Z" fill="#e63946" />
-                <path d="M 70,38 L 130,38 L 122,48 L 78,48 Z" fill="#e2a138" />
-                <path d="M 73,52 L 127,52 L 120,62 L 80,62 Z" fill="#ffffff" />
-                <path d="M 76,66 L 124,66 L 118,76 L 82,76 Z" fill="#e2a138" />
-                <path d="M 80,80 L 120,80 L 115,90 L 85,90 Z" fill="#ffffff" />
-                <path d="M 84,94 L 116,94 L 111,104 L 89,104 Z" fill="#e2a138" />
-                <path d="M 90,108 L 110,108 L 100,122 Z" fill="#ffffff" />
-                <rect x="97" y="122" width="6" height="15" fill="#e2a138" />
-                <text x="100" y="152" fill="#e2a138" font-size="16" font-family="'Cairo', sans-serif" text-anchor="middle" font-weight="bold">شاورما</text>
-                <text x="100" y="185" fill="#ffffff" font-size="32" font-family="'Cairo', sans-serif" text-anchor="middle" font-weight="900">الزين</text>
-            </svg>
+    <!-- Header Section -->
+    <header class="text-center py-8 px-4 border-b border-slate-800 bg-slate-950/50 backdrop-blur-md sticky top-0 z-50">
+        <div class="max-w-4xl mx-auto flex flex-col items-center gap-3">
+            <div class="w-20 h-20 bg-amber-500 rounded-full flex items-center justify-center shadow-lg border-2 border-amber-300">
+                <span class="text-3xl font-extrabold text-slate-950">الزين</span>
+            </div>
+            <h1 class="text-3xl md:text-4xl font-extrabold text-amber-400">شاورما الزين</h1>
+            <p class="text-slate-400 text-sm md:text-base">أطيب الوجبات الغربية والشاورما - اضغط للطلب مباشرة عبر الواتساب</p>
         </div>
-
-        <h1>شاورما الزين</h1>
-        <p>أطيب الوجبات الغربية والشاورما - اضغط للطلب مباشرة عبر الواتساب</p>
     </header>
 
-    <nav class="categories-nav">
-        <button class="category-btn active" onclick="filterMenu('all')">الكل</button>
-        <button class="category-btn" onclick="filterMenu('shawarma')">الشاورما</button>
-        <button class="category-btn" onclick="filterMenu('western')">الوجبات الغربية</button>
-        <button class="category-btn" onclick="filterMenu('drinks')">المشروبات</button>
-    </nav>
+    <!-- Category Filters -->
+    <main class="max-w-6xl mx-auto px-4 mt-6">
+        <div class="flex justify-center gap-2 md:gap-4 mb-8 overflow-x-auto py-2 no-scrollbar">
+            <button onclick="filterCategory('all')" class="cat-btn active bg-amber-500 text-slate-950 font-bold px-5 py-2 rounded-full text-sm transition-all hover:bg-amber-400 shadow-md">الكل</button>
+            <button onclick="filterCategory('shawarma')" class="cat-btn bg-slate-800 text-slate-300 font-medium px-5 py-2 rounded-full text-sm transition-all hover:bg-slate-700">الشاورما</button>
+            <button onclick="filterCategory('western')" class="cat-btn bg-slate-800 text-slate-300 font-medium px-5 py-2 rounded-full text-sm transition-all hover:bg-slate-700">الوجبات الغربية</button>
+            <button onclick="filterCategory('drinks')" class="cat-btn bg-slate-800 text-slate-300 font-medium px-5 py-2 rounded-full text-sm transition-all hover:bg-slate-700">المشروبات</button>
+        </div>
 
-    <div class="container">
-        <div class="menu-grid" id="menuContainer"></div>
-    </div>
+        <!-- Menu Items Grid -->
+        <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <!-- Loading Indicator -->
+            <div class="col-span-full text-center py-12 text-slate-400">
+                <div class="inline-block animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-amber-500 mb-2"></div>
+                <p>جاري تحميل قائمة الطعام...</p>
+            </div>
+        </div>
+    </main>
 
     <script>
-        // رقم الواتساب المكتوب في الصورة
-        const RESTAURANT_PHONE = "963995829459"; 
+        const SHEET_ID = '1AwuHd2YCOUpzJKTbj70x_8B-MuzFWGkRTvcL2YRlxdE';
+        let currentItems = [];
+        let activeCategory = 'all';
 
-        // بيانات تجريبية جاهزة للعرض الفوري
-        const initialMenuItems = [
-            {
-                title: "وجبة شاورما عربي دجاج",
-                price: "$4.50",
-                category: "shawarma",
-                description: "شرائح الشاورما المتبلة على أصولها، مقطعة مع الثومية والمخلل والبطاطس المقلية.",
-                image: "https://images.unsplash.com/photo-1529006557810-274b9b2fc783?w=500"
-            },
-            {
-                title: "برغر الزين ديلوكس",
-                price: "$6.00",
-                category: "western",
-                description: "شريحة لحم بقر طازجة مع جبنة الشيدر الذائبة، الخس، الطماطم وصلصة الزين الخاصة.",
-                image: "https://images.unsplash.com/photo-1568901346375-23c9450c58cd?w=500"
-            },
-            {
-                title: "كولا باردة",
-                price: "$1.00",
-                category: "drinks",
-                description: "مشروب غازي بارد منعش (330 مل).",
-                image: "https://images.unsplash.com/photo-1622483767028-3f66f32aef97?w=500"
+        // دالة جلب البيانات المباشرة من Google Sheets
+        async function fetchMenuData() {
+            if (!SHEET_ID) return;
+
+            // رابط جلب بيانات مباشر ومنع الكاش لضمان التحديث المباشر
+            const url = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&t=${Date.now()}`;
+
+            try {
+                const response = await fetch(url);
+                const text = await response.text();
+                
+                // تحويل الاستجابة النصية إلى JSON
+                const jsonData = JSON.parse(text.substring(47, text.length - 2));
+                const rows = jsonData.table.rows;
+
+                if (rows && rows.length > 0) {
+                    currentItems = rows.map(row => {
+                        return {
+                            title: row.c[0] ? String(row.c[0].v || '') : '',
+                            price: row.c[1] ? String(row.c[1].v || '') : '',
+                            category: row.c[2] ? String(row.c[2].v || '').toLowerCase().trim() : 'shawarma',
+                            description: row.c[3] ? String(row.c[3].v || '') : '',
+                            image: row.c[4] ? String(row.c[4].v || '') : 'https://images.unsplash.com/photo-1561651823-34feb02250e4'
+                        };
+                    }).filter(item => item.title.trim() !== '');
+
+                    renderMenu();
+                } else {
+                    showEmptyMessage();
+                }
+            } catch (error) {
+                console.error("خطأ في تحميل البيانات:", error);
+                showErrorMessage();
             }
-        ];
-
-        // ضع ID الخاص بجدول Google Sheets هنا لو أردت الربط مستقبلاً
-// الربط المباشر المحدث لـ Google Sheets
-const SHEET_ID = '1AwuHd2YCOUpzJKTbj70x_8B-MuzFWGkRTvcL2YRlxdE';
-
-// جلب البيانات مباشرة من سيرفر جوجل بدون وسيط وبدون كاش
-const SHEET_URL = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&t=${Date.now()}`;
-
-async function initMenu() {
-  if (!SHEET_ID) return;
-  
-  try {
-    const response = await fetch(SHEET_URL);
-    const text = await response.text();
-    
-    // استخراج بيانات JSON المرجعة من جوجل
-    const jsonData = JSON.parse(text.substring(47, text.length - 2));
-    const rows = jsonData.table.rows;
-    
-    if (rows && rows.length > 0) {
-      const items = rows.map(row => ({
-        title: row.c[0] ? row.c[0].v : '',
-        price: row.c[1] ? row.c[1].v : '',
-        category: row.c[2] ? row.c[2].v : '',
-        description: row.c[3] ? row.c[3].v : '',
-        image: row.c[4] ? row.c[4].v : ''
-      }));
-      
-      currentItems = items;
-      renderMenu(currentItems);
-    }
-  } catch (error) {
-    console.error("خطأ في جلب البيانات المباشرة:", error);
-  }
-}
-
-initMenu();          }
-            }
-            renderMenu(currentItems);
         }
 
-        function renderMenu(items) {
-            const container = document.getElementById('menuContainer');
-            container.innerHTML = '';
+        // دالة عرض العناصر على الشاشة
+        function renderMenu() {
+            const grid = document.getElementById('menu-grid');
+            
+            const filteredItems = activeCategory === 'all' 
+                ? currentItems 
+                : currentItems.filter(item => item.category === activeCategory);
 
-            items.forEach(item => {
-                const card = document.createElement('div');
-                card.className = 'menu-card';
-                card.dataset.category = item.category;
+            if (filteredItems.length === 0) {
+                grid.innerHTML = `<div class="col-span-full text-center py-8 text-slate-500">لا توجد أصناف متوفرة في هذا القسم حالياً.</div>`;
+                return;
+            }
 
-                const message = encodeURIComponent(`مرحباً مطعم شاورما الزين، أرغب بطلب:\n- ${item.title}\n- السعر: ${item.price}`);
-                const whatsappUrl = `https://wa.me/${RESTAURANT_PHONE}?text=${message}`;
-
-                card.innerHTML = `
-                    <img src="${item.image || 'https://via.placeholder.com/300'}" alt="${item.title}" class="card-img">
-                    <div class="card-body">
-                        <div>
-                            <div class="card-header">
-                                <span class="item-title">${item.title}</span>
-                                <span class="item-price">${item.price}</span>
-                            </div>
-                            <p class="item-desc">${item.description}</p>
+            grid.innerHTML = filteredItems.map(item => `
+                <div class="bg-slate-800/80 rounded-2xl overflow-hidden border border-slate-700/50 shadow-lg flex flex-col justify-between hover:border-amber-500/50 transition-all duration-300">
+                    <div>
+                        <div class="h-48 overflow-hidden bg-slate-900 relative">
+                            <img src="${item.image}" alt="${item.title}" class="w-full h-full object-cover hover:scale-105 transition-transform duration-500" onerror="this.src='https://images.unsplash.com/photo-1561651823-34feb02250e4'">
+                            <span class="absolute top-3 left-3 bg-amber-500 text-slate-950 font-bold px-3 py-1 rounded-full text-xs shadow-md">
+                                ${item.price}
+                            </span>
                         </div>
-                        <a href="${whatsappUrl}" target="_blank" class="whatsapp-btn">
-                            <i class="fa-brands fa-whatsapp"></i> طلب عبر واتساب
+                        <div class="p-5">
+                            <h3 class="text-xl font-bold text-slate-100 mb-2">${item.title}</h3>
+                            <p class="text-slate-400 text-sm leading-relaxed">${item.description}</p>
+                        </div>
+                    </div>
+                    <div class="p-5 pt-0">
+                        <a href="https://wa.me/?text=${encodeURIComponent('أرغب بطلب: ' + item.title)}" target="_blank" class="w-full block text-center bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-2.5 rounded-xl text-sm transition-colors shadow-md">
+                            طلب عبر واتساب 💬
                         </a>
                     </div>
-                `;
-                container.appendChild(card);
+                </div>
+            `).join('');
+        }
+
+        // دالة التصفية حسب القسم
+        function filterCategory(cat) {
+            activeCategory = cat;
+            
+            // تحديث شكل الأزرار
+            document.querySelectorAll('.cat-btn').forEach(btn => {
+                btn.classList.remove('bg-amber-500', 'text-slate-950', 'font-bold');
+                btn.classList.add('bg-slate-800', 'text-slate-300', 'font-medium');
             });
+            event.currentTarget.classList.remove('bg-slate-800', 'text-slate-300', 'font-medium');
+            event.currentTarget.classList.add('bg-amber-500', 'text-slate-950', 'font-bold');
+
+            renderMenu();
         }
 
-        function filterMenu(category) {
-            const buttons = document.querySelectorAll('.category-btn');
-            buttons.forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-
-            if (category === 'all') {
-                renderMenu(currentItems);
-            } else {
-                const filtered = currentItems.filter(item => item.category === category);
-                renderMenu(filtered);
-            }
+        function showEmptyMessage() {
+            document.getElementById('menu-grid').innerHTML = `<div class="col-span-full text-center py-12 text-slate-400">القائمة فارغة حالياً. اضف أصناف من Google Sheets.</div>`;
         }
 
-        initMenu();
+        function showErrorMessage() {
+            document.getElementById('menu-grid').innerHTML = `<div class="col-span-full text-center py-12 text-red-400">تعذر جلب البيانات. تأكد من أن Google Sheets منشور للعلن وبصلاحية 'Anyone with link'.</div>`;
+        }
+
+        // التشغيل المباشر عند فتح الصفحة
+        document.addEventListener('DOMContentLoaded', fetchMenuData);
     </script>
 </body>
 </html>
