@@ -18,30 +18,32 @@
       background-color: #0f172a;
       color: #f8fafc;
       direction: rtl;
-      padding-bottom: 40px;
+      padding-bottom: 90px; /* مساحة متوافقة مع شريط السلة في الأسفل */
     }
 
     /* الهيدر واللوجو */
     .header {
-      background-image: linear-gradient(rgba(15, 23, 42, 0.85), rgba(15, 23, 42, 0.85)), url('images/logo.jpg');
-      background-size: cover;
-      background-position: center;
-      background-repeat: no-repeat;
+      background-color: #1e293b;
       text-align: center;
-      padding: 35px 20px;
+      padding: 30px 20px 20px 20px;
       border-bottom: 2px solid #ff9800;
     }
 
     .logo-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
       margin-bottom: 12px;
     }
 
     .main-logo {
-      width: 90px;
-      height: 90px;
+      width: 95px;
+      height: 95px;
       border-radius: 50%;
-      border: 2px solid #ff9800;
+      border: 3px solid #ff9800;
       object-fit: cover;
+      background-color: #0f172a;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
     }
 
     .header h1 {
@@ -149,7 +151,7 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.4);
     }
 
-    /* تفاصيل البطاقة وزر الواتساب */
+    /* تفاصيل البطاقة والأزرار */
     .card-body {
       padding: 16px;
       display: flex;
@@ -172,33 +174,125 @@
       flex-grow: 1;
     }
 
-    .whatsapp-btn {
-      display: block;
+    /* أزرار السلة داخل البطاقات */
+    .add-to-cart-btn {
       width: 100%;
       padding: 10px;
-      background-color: #25d366;
-      color: white;
-      text-align: center;
+      background-color: #ff9800;
+      color: #0f172a;
+      border: none;
       border-radius: 8px;
-      text-decoration: none;
       font-weight: bold;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
       transition: background 0.2s ease;
     }
 
-    .whatsapp-btn:hover {
+    .add-to-cart-btn:hover {
+      background-color: #e68a00;
+    }
+
+    .quantity-controls {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background-color: #0f172a;
+      border: 1px solid #ff9800;
+      border-radius: 8px;
+      padding: 4px;
+    }
+
+    .qty-btn {
+      background-color: #ff9800;
+      color: #0f172a;
+      border: none;
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      font-weight: bold;
+      font-size: 1.1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qty-count {
+      font-weight: bold;
+      color: #f8fafc;
+      font-size: 1.1rem;
+    }
+
+    /* شريط السلة العائم في الأسفل */
+    .cart-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background-color: #1e293b;
+      border-top: 2px solid #25d366;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 -4px 15px rgba(0, 0, 0, 0.5);
+      z-index: 1000;
+      transform: translateY(100%);
+      transition: transform 0.3s ease-in-out;
+    }
+
+    .cart-bar.active {
+      transform: translateY(0);
+    }
+
+    .cart-info {
+      display: flex;
+      flex-direction: column;
+      gap: 3px;
+    }
+
+    .cart-count {
+      color: #94a3b8;
+      font-size: 0.85rem;
+    }
+
+    .cart-total {
+      color: #ff9800;
+      font-weight: bold;
+      font-size: 1rem;
+    }
+
+    .send-whatsapp-btn {
+      background-color: #25d366;
+      color: white;
+      text-decoration: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+    }
+
+    .send-whatsapp-btn:hover {
       background-color: #128c7e;
     }
   </style>
 </head>
 <body>
 
-  <!-- الهيدر -->
+  <!-- الهيدر واللوجو -->
   <header class="header">
     <div class="logo-wrapper">
-      <img src="images/logo.jpg" alt="شاورما الزين" class="main-logo" onerror="this.style.display='none'">
+      <img src="images/logo.jpg" alt="شاورما الزين" class="main-logo" onerror="this.src='images/logo.png'">
     </div>
     <h1>شاورما الزين</h1>
-    <p>أطيب الوجبات الغربية والشاورما - اضغط للطلب مباشرة عبر الواتساب</p>
+    <p>أطيب الوجبات الغربية والشاورما - اختر وجباتك وأرسل الطلب عبر الواتساب</p>
   </header>
 
   <!-- أزرار الفئات -->
@@ -213,12 +307,24 @@
     <div id="menu-container" class="menu-grid"></div>
   </main>
 
+  <!-- شريط السلة الثابت بالأسفل -->
+  <div id="cart-bar" class="cart-bar">
+    <div class="cart-info">
+      <span id="cart-count-text" class="cart-count">الطلب: 0 عنصر</span>
+      <span id="cart-total-text" class="cart-total">المجموع: 0 TL / 0 S</span>
+    </div>
+    <a href="#" id="whatsapp-order-btn" class="send-whatsapp-btn" target="_blank">
+      <i class="fab fa-whatsapp"></i> إرسال الطلب
+    </a>
+  </div>
+
   <script>
     let fullMenuData = [];
+    let cart = {}; // تخزين السلة: { itemTitle: { item, qty } }
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/1AwuHd2YCOUpzJKTbj70x_8B-MuzFWGkRTvcL2YRlxdE/gviz/tq?tqx=out:csv';
     const phoneNumber = "963995829459"; // رقم الواتساب المعتمد
 
-    // جلب البيانات مباشرة من Google Sheets
+    // جلب البيانات من Google Sheets
     async function fetchMenuData() {
       try {
         const response = await fetch(sheetUrl);
@@ -230,15 +336,13 @@
       }
     }
 
-    // تحليل نص CSV وحل مشاكل المسافات والاقتباسات
+    // تحليل CSV
     function parseCSV(csvText) {
       const cleanText = csvText.replace(/^\uFEFF/, '');
       const lines = cleanText.trim().split(/\r?\n/).filter(line => line.trim() !== '');
       if (lines.length < 2) return [];
 
       const delimiter = lines[0].includes(';') ? ';' : ',';
-      
-      // استخراج وتنظيف عناوين الأعمدة
       const headers = lines[0].split(delimiter).map(h => h.trim().replace(/^"|"$/g, '').toLowerCase());
 
       return lines.slice(1).map(line => {
@@ -255,10 +359,14 @@
           item[header] = values[index] !== undefined ? values[index] : '';
         });
 
+        // تنظيف وتحويل الأسعار إلى أرقام
+        const priceTryNum = parseFloat((item.price_try || item.price || '0').toString().replace(/[^0-9.]/g, '')) || 0;
+        const priceSNum = parseFloat((item.price_s || item.price_syp || '0').toString().replace(/[^0-9.]/g, '')) || 0;
+
         return {
           title: item.title || item['عنوان'] || '',
-          price_try: item.price_try || item.price || '0',
-          price_s: item.price_s || item.price_syp || '0',
+          price_try: priceTryNum,
+          price_s: priceSNum,
           category: item.category || 'meals',
           description: item.description || '',
           image: item.image || ''
@@ -274,9 +382,8 @@
       container.innerHTML = menuData.map(item => {
         const imageName = item.image ? item.image.trim() : '';
         const imagePath = imageName ? `images/${imageName}` : 'images/default.jpg';
+        const qty = cart[item.title] ? cart[item.title].qty : 0;
 
-    const whatsappText = encodeURIComponent(`مرحبا، أرغب بطلب: ${item.title} (السعر: ${item.price_try} TL / ${item.price_s} S)`);
-const whatsappUrl = `https://wa.me/${phoneNumber}?text=${whatsappText}`;
         return `
           <div class="card">
             <div class="card-img-container">
@@ -290,19 +397,98 @@ const whatsappUrl = `https://wa.me/${phoneNumber}?text=${whatsappText}`;
             
             <div class="card-body">
               <h3 class="card-title">${item.title}</h3>
-              
               <p class="card-description">${item.description}</p>
               
-              <a href="${whatsappUrl}" class="whatsapp-btn" target="_blank" rel="noopener noreferrer">
-                <i class="fab fa-whatsapp"></i> طلب عبر واتساب
-              </a>
+              <div id="btn-container-${encodeURIComponent(item.title)}">
+                ${renderCartButton(item, qty)}
+              </div>
             </div>
           </div>
         `;
       }).join('');
     }
 
-    // تصفية الفئات الذكية المحدثة لتشمل كل السندويشات والوجبات
+    // إنشاء أزرار السلة
+    function renderCartButton(item, qty) {
+      const titleEsc = encodeURIComponent(item.title);
+      if (qty === 0) {
+        return `
+          <button class="add-to-cart-btn" onclick="updateQty('${titleEsc}', 1)">
+            <i class="fas fa-cart-plus"></i> إضافة إلى السلة
+          </button>
+        `;
+      } else {
+        return `
+          <div class="quantity-controls">
+            <button class="qty-btn" onclick="updateQty('${titleEsc}', ${qty - 1})">-</button>
+            <span class="qty-count">${qty}</span>
+            <button class="qty-btn" onclick="updateQty('${titleEsc}', ${qty + 1})">+</button>
+          </div>
+        `;
+      }
+    }
+
+    // تحديث الكمية داخل السلة
+    function updateQty(titleEsc, newQty) {
+      const title = decodeURIComponent(titleEsc);
+      const item = fullMenuData.find(i => i.title === title);
+
+      if (!item) return;
+
+      if (newQty <= 0) {
+        delete cart[title];
+      } else {
+        cart[title] = { item: item, qty: newQty };
+      }
+
+      // تحديث الزر الخاص بالبطاقة
+      const btnContainer = document.getElementById(`btn-container-${titleEsc}`);
+      if (btnContainer) {
+        btnContainer.innerHTML = renderCartButton(item, newQty <= 0 ? 0 : newQty);
+      }
+
+      updateCartBar();
+    }
+
+    // تحديث شريط السلة السفلي ورابط الواتساب
+    function updateCartBar() {
+      const cartBar = document.getElementById('cart-bar');
+      const cartCountText = document.getElementById('cart-count-text');
+      const cartTotalText = document.getElementById('cart-total-text');
+      const whatsappBtn = document.getElementById('whatsapp-order-btn');
+
+      const cartItems = Object.values(cart);
+      if (cartItems.length === 0) {
+        cartBar.classList.remove('active');
+        return;
+      }
+
+      cartBar.classList.add('active');
+
+      let totalItems = 0;
+      let totalTry = 0;
+      let totalSyp = 0;
+      let messageLines = ["مرحبا، أرغب بتسجيل الطلب التالي:\n"];
+
+      cartItems.forEach(cartItem => {
+        const { item, qty } = cartItem;
+        totalItems += qty;
+        totalTry += item.price_try * qty;
+        totalSyp += item.price_s * qty;
+
+        messageLines.push(`• ${item.title} (العدد: ${qty}) - ${item.price_try * qty} TL / ${item.price_s * qty} S`);
+      });
+
+      messageLines.push(`\n📌 الإجمالي الكلي: ${totalTry} TL / ${totalSyp} S`);
+
+      cartCountText.innerText = `الطلب: ${totalItems} عناصر`;
+      cartTotalText.innerText = `المجموع: ${totalTry} TL / ${totalSyp} S`;
+
+      const whatsappText = encodeURIComponent(messageLines.join('\n'));
+      whatsappBtn.href = `https://wa.me/${phoneNumber}?text=${whatsappText}`;
+    }
+
+    // تصفية الفئات
     function filterMenu(category) {
       document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
       if (window.event && window.event.target) {
@@ -315,12 +501,8 @@ const whatsappUrl = `https://wa.me/${phoneNumber}?text=${whatsappText}`;
         const filtered = fullMenuData.filter(item => {
           if (!item.category) return false;
           const cat = item.category.trim().toLowerCase();
-          
-          if (category === 'meals') {
-            return cat.includes('meal');
-          } else if (category === 'sandwiches') {
-            return cat.includes('sandwich') || cat.includes('sand');
-          }
+          if (category === 'meals') return cat.includes('meal');
+          if (category === 'sandwiches') return cat.includes('sandwich') || cat.includes('sand');
           return cat === category.toLowerCase();
         });
         renderMenuItems(filtered);
