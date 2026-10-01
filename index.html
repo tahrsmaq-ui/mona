@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مأكولات الزين - شاورما</title>
+  <title>مأكولات الزين - شاورما وغربي ومشويات ومقبلات</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
@@ -18,7 +18,7 @@
       background-color: #0f172a;
       color: #f8fafc;
       direction: rtl;
-      padding-bottom: 90px; /* مساحة متوافقة مع شريط السلة في الأسفل */
+      padding-bottom: 90px;
     }
 
     /* الهيدر واللوجو */
@@ -57,24 +57,39 @@
       font-size: 0.95rem;
     }
 
-    /* أزرار التصفية */
-    .categories {
+    /* أزرار التصفية الأفقية والقابلة للتمرير */
+    .categories-wrapper {
+      padding: 15px 10px;
+      overflow-x: auto;
+      white-space: nowrap;
       display: flex;
-      justify-content: center;
-      gap: 10px;
-      padding: 20px 10px;
-      flex-wrap: wrap;
+      justify-content: flex-start;
+      -webkit-overflow-scrolling: touch;
+    }
+
+    @media (min-width: 992px) {
+      .categories-wrapper {
+        justify-content: center;
+      }
+    }
+
+    .categories {
+      display: inline-flex;
+      gap: 8px;
+      padding: 5px;
     }
 
     .cat-btn {
       background-color: #1e293b;
       color: #94a3b8;
       border: 1px solid #334155;
-      padding: 8px 20px;
+      padding: 8px 16px;
       border-radius: 20px;
       cursor: pointer;
       font-weight: bold;
       transition: all 0.3s ease;
+      font-size: 0.9rem;
+      white-space: nowrap;
     }
 
     .cat-btn.active, .cat-btn:hover {
@@ -174,7 +189,7 @@
       flex-grow: 1;
     }
 
-    /* أزرار السلة داخل البطاقات */
+    /* أزرار السلة */
     .add-to-cart-btn {
       width: 100%;
       padding: 10px;
@@ -227,7 +242,7 @@
       font-size: 1.1rem;
     }
 
-    /* شريط السلة العائم في الأسفل */
+    /* شريط السلة العائم بالأسفل */
     .cart-bar {
       position: fixed;
       bottom: 0;
@@ -292,15 +307,22 @@
       <img src="images/logo.jpg" alt="شاورما الزين" class="main-logo" onerror="this.src='images/logo.png'">
     </div>
     <h1>شاورما الزين</h1>
-    <p>أطيب الوجبات الغربية والشاورما - اختر وجباتك وأرسل الطلب عبر الواتساب</p>
+    <p>أطيب الوجبات الغربية والشاورما والمقبلات - اختر وجباتك وأرسل الطلب عبر الواتساب</p>
   </header>
 
-  <!-- أزرار الفئات -->
-  <nav class="categories">
-    <button class="cat-btn active" onclick="filterMenu('all')">الكل</button>
-    <button class="cat-btn" onclick="filterMenu('meals')">الوجبات</button>
-    <button class="cat-btn" onclick="filterMenu('sandwiches')">السندويش</button>
-  </nav>
+  <!-- أزرار الفئات السبع القابلة للتمرير -->
+  <div class="categories-wrapper">
+    <nav class="categories">
+      <button class="cat-btn active" onclick="filterMenu('all')">الكل</button>
+      <button class="cat-btn" onclick="filterMenu('shawarma-sand')">سندويش شاورما</button>
+      <button class="cat-btn" onclick="filterMenu('western-sand')">سندويش غريب</button>
+      <button class="cat-btn" onclick="filterMenu('shawarma-meals')">وجبات شاورما</button>
+      <button class="cat-btn" onclick="filterMenu('western-meals')">وجبات غريب</button>
+      <button class="cat-btn" onclick="filterMenu('grilled-chicken')">فروج مشوي</button>
+      <button class="cat-btn" onclick="filterMenu('appetizers')">مقبلات</button>
+      <button class="cat-btn" onclick="filterMenu('drinks')">مشروبات</button>
+    </nav>
+  </div>
 
   <!-- حاوية المنتجات -->
   <main class="container">
@@ -320,11 +342,11 @@
 
   <script>
     let fullMenuData = [];
-    let cart = {}; // تخزين السلة: { itemTitle: { item, qty } }
+    let cart = {}; 
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/1AwuHd2YCOUpzJKTbj70x_8B-MuzFWGkRTvcL2YRlxdE/gviz/tq?tqx=out:csv';
-    const phoneNumber = "963995829459"; // رقم الواتساب المعتمد
+    const phoneNumber = "963995829459";
 
-    // جلب البيانات من Google Sheets
+    // جلب البيانات
     async function fetchMenuData() {
       try {
         const response = await fetch(sheetUrl);
@@ -359,7 +381,6 @@
           item[header] = values[index] !== undefined ? values[index] : '';
         });
 
-        // تنظيف وتحويل الأسعار إلى أرقام
         const priceTryNum = parseFloat((item.price_try || item.price || '0').toString().replace(/[^0-9.]/g, '')) || 0;
         const priceSNum = parseFloat((item.price_s || item.price_syp || '0').toString().replace(/[^0-9.]/g, '')) || 0;
 
@@ -367,7 +388,7 @@
           title: item.title || item['عنوان'] || '',
           price_try: priceTryNum,
           price_s: priceSNum,
-          category: item.category || 'meals',
+          category: item.category || 'shawarma-meals',
           description: item.description || '',
           image: item.image || ''
         };
@@ -408,7 +429,7 @@
       }).join('');
     }
 
-    // إنشاء أزرار السلة
+    // أزرار السلة
     function renderCartButton(item, qty) {
       const titleEsc = encodeURIComponent(item.title);
       if (qty === 0) {
@@ -428,7 +449,7 @@
       }
     }
 
-    // تحديث الكمية داخل السلة
+    // تحديث الكمية
     function updateQty(titleEsc, newQty) {
       const title = decodeURIComponent(titleEsc);
       const item = fullMenuData.find(i => i.title === title);
@@ -441,7 +462,6 @@
         cart[title] = { item: item, qty: newQty };
       }
 
-      // تحديث الزر الخاص بالبطاقة
       const btnContainer = document.getElementById(`btn-container-${titleEsc}`);
       if (btnContainer) {
         btnContainer.innerHTML = renderCartButton(item, newQty <= 0 ? 0 : newQty);
@@ -450,7 +470,7 @@
       updateCartBar();
     }
 
-    // تحديث شريط السلة السفلي ورابط الواتساب
+    // تحديث السلة والواتساب
     function updateCartBar() {
       const cartBar = document.getElementById('cart-bar');
       const cartCountText = document.getElementById('cart-count-text');
@@ -488,7 +508,7 @@
       whatsappBtn.href = `https://wa.me/${phoneNumber}?text=${whatsappText}`;
     }
 
-    // تصفية الفئات
+    // تصفية الأقسام المحدثة
     function filterMenu(category) {
       document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
       if (window.event && window.event.target) {
@@ -501,8 +521,22 @@
         const filtered = fullMenuData.filter(item => {
           if (!item.category) return false;
           const cat = item.category.trim().toLowerCase();
-          if (category === 'meals') return cat.includes('meal');
-          if (category === 'sandwiches') return cat.includes('sandwich') || cat.includes('sand');
+
+          if (category === 'shawarma-sand') {
+            return cat.includes('shawarma-sand') || (cat.includes('shawarma') && cat.includes('sand'));
+          } else if (category === 'western-sand') {
+            return cat.includes('western-sand') || (cat.includes('west') && cat.includes('sand'));
+          } else if (category === 'shawarma-meals') {
+            return cat.includes('shawarma-meal') || (cat.includes('shawarma') && cat.includes('meal'));
+          } else if (category === 'western-meals') {
+            return cat.includes('western-meal') || (cat.includes('west') && cat.includes('meal'));
+          } else if (category === 'grilled-chicken') {
+            return cat.includes('grilled') || cat.includes('chicken') || cat.includes('فروج') || cat.includes('مشوي');
+          } else if (category === 'appetizers') {
+            return cat.includes('appetizer') || cat.includes('مقبلات') || cat.includes('سلطة') || cat.includes('بطاطا');
+          } else if (category === 'drinks') {
+            return cat.includes('drink') || cat.includes('مشروب');
+          }
           return cat === category.toLowerCase();
         });
         renderMenuItems(filtered);
