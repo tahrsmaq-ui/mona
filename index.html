@@ -253,13 +253,26 @@
       font-size: 0.88rem;
     }
 
+    .developer-links {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
     .developer-footer a {
       color: #ff9800;
       text-decoration: none;
       font-weight: bold;
       direction: ltr;
-      display: inline-block;
-      margin-top: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .developer-footer a.insta-link {
+      color: #e1306c;
     }
 
     .developer-footer a:hover {
@@ -353,11 +366,14 @@
     <div id="menu-container" class="menu-grid"></div>
   </main>
 
-  <!-- توقيع المطوّر والمصمم برقمك الخاص -->
+  <!-- توقيع المطوّر والمصمم -->
   <footer class="developer-footer">
-    <p>تصميم وتطوير الموقع بواسطة: <strong style="color: #f8fafc;"> عبدالله سماق</strong></p>
-    <p>لطلب مواقع إلكترونية أو المنيو الرقمي التواصل عبر الواتساب:</p>
-    <a href="https://wa.me/963932510043" target="_blank"><i class="fab fa-whatsapp"></i> +963 932 510 043</a>
+    <p>تصميم وتطوير الموقع بواسطة: <strong style="color: #f8fafc;">طاهر سماق</strong></p>
+    <p style="margin-top: 4px;">لطلب مواقع إلكترونية أو المنيو الرقمي التواصل عبر:</p>
+    <div class="developer-links">
+      <a href="https://wa.me/963932510043" target="_blank"><i class="fab fa-whatsapp"></i> +963 932 510 043</a>
+      <a href="https://instagram.com/ab__o.d.01" target="_blank" class="insta-link"><i class="fab fa-instagram"></i> @ab__o.d.01</a>
+    </div>
   </footer>
 
   <!-- شريط السلة الثابت بالأسفل -->
