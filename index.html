@@ -18,14 +18,14 @@
       background-color: #0f172a;
       color: #f8fafc;
       direction: rtl;
-      padding-bottom: 90px;
+      padding-bottom: 120px;
     }
 
     /* الهيدر واللوجو */
     .header {
       background-color: #1e293b;
       text-align: center;
-      padding: 30px 20px 20px 20px;
+      padding: 25px 20px 20px 20px;
       border-bottom: 2px solid #ff9800;
     }
 
@@ -242,7 +242,31 @@
       font-size: 1.1rem;
     }
 
-    /* شريط السلة العائم بالأسفل */
+    /* توقيع المصمم في أسفل الموقع */
+    .developer-footer {
+      text-align: center;
+      padding: 25px 15px;
+      margin-top: 40px;
+      background-color: #1e293b;
+      border-top: 1px solid #334155;
+      color: #94a3b8;
+      font-size: 0.88rem;
+    }
+
+    .developer-footer a {
+      color: #ff9800;
+      text-decoration: none;
+      font-weight: bold;
+      direction: ltr;
+      display: inline-block;
+      margin-top: 4px;
+    }
+
+    .developer-footer a:hover {
+      text-decoration: underline;
+    }
+
+    /* شريط السلة الثابت بالأسفل */
     .cart-bar {
       position: fixed;
       bottom: 0;
@@ -315,9 +339,9 @@
     <nav class="categories">
       <button class="cat-btn active" onclick="filterMenu('all')">الكل</button>
       <button class="cat-btn" onclick="filterMenu('shawarma-sand')">سندويش شاورما</button>
-      <button class="cat-btn" onclick="filterMenu('western-sand')">سندويش غربي</button>
+      <button class="cat-btn" onclick="filterMenu('western-sand')">سندويش غريب</button>
       <button class="cat-btn" onclick="filterMenu('shawarma-meals')">وجبات شاورما</button>
-      <button class="cat-btn" onclick="filterMenu('western-meals')">وجبات  غربي</button>
+      <button class="cat-btn" onclick="filterMenu('western-meals')">وجبات غريب</button>
       <button class="cat-btn" onclick="filterMenu('grilled-chicken')">فروج مشوي</button>
       <button class="cat-btn" onclick="filterMenu('appetizers')">مقبلات</button>
       <button class="cat-btn" onclick="filterMenu('drinks')">مشروبات</button>
@@ -328,6 +352,13 @@
   <main class="container">
     <div id="menu-container" class="menu-grid"></div>
   </main>
+
+  <!-- توقيع المطوّر والمصمم برقمك الخاص -->
+  <footer class="developer-footer">
+    <p>تصميم وتطوير الموقع بواسطة: <strong style="color: #f8fafc;">طاهر سماق</strong></p>
+    <p>لطلب مواقع إلكترونية أو المنيو الرقمي التواصل عبر الواتساب:</p>
+    <a href="https://wa.me/963932510043" target="_blank"><i class="fab fa-whatsapp"></i> +963 932 510 043</a>
+  </footer>
 
   <!-- شريط السلة الثابت بالأسفل -->
   <div id="cart-bar" class="cart-bar">
@@ -344,7 +375,7 @@
     let fullMenuData = [];
     let cart = {}; 
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/1AwuHd2YCOUpzJKTbj70x_8B-MuzFWGkRTvcL2YRlxdE/gviz/tq?tqx=out:csv';
-    const phoneNumber = "963995829459";
+    const restaurantPhoneNumber = "963995829459"; // رقم المطعم لاستلام الطلبات
 
     // جلب البيانات
     async function fetchMenuData() {
@@ -505,7 +536,7 @@
       cartTotalText.innerText = `المجموع: ${totalTry} TL / ${totalSyp} S`;
 
       const whatsappText = encodeURIComponent(messageLines.join('\n'));
-      whatsappBtn.href = `https://wa.me/${phoneNumber}?text=${whatsappText}`;
+      whatsappBtn.href = `https://wa.me/${restaurantPhoneNumber}?text=${whatsappText}`;
     }
 
     // تصفية الأقسام المحدثة
