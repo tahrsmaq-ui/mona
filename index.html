@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>مأكولات الزين - شاورما وغربي ومشويات ومقبلات</title>
+  <title>مأكولات الزين - شاورما وغربي ومقبلات</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   
   <style>
@@ -21,7 +21,6 @@
       padding-bottom: 120px;
     }
 
-    /* الهيدر واللوجو */
     .header {
       background-color: #1e293b;
       text-align: center;
@@ -57,7 +56,6 @@
       font-size: 0.95rem;
     }
 
-    /* أزرار التصفية الأفقية والقابلة للتمرير */
     .categories-wrapper {
       padding: 15px 10px;
       overflow-x: auto;
@@ -98,11 +96,29 @@
       border-color: #ff9800;
     }
 
-    /* شبكة عرض البطاقات */
     .container {
       max-width: 1200px;
       margin: 0 auto;
       padding: 0 15px;
+      min-height: 250px;
+    }
+
+    .loading-status {
+      text-align: center;
+      padding: 40px 20px;
+      color: #94a3b8;
+      font-size: 1.05rem;
+    }
+
+    .loading-status button {
+      margin-top: 15px;
+      padding: 8px 18px;
+      background-color: #ff9800;
+      color: #0f172a;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
     }
 
     .menu-grid {
@@ -111,7 +127,6 @@
       gap: 20px;
     }
 
-    /* البطاقة */
     .card {
       background-color: #1e293b;
       border-radius: 12px;
@@ -136,7 +151,6 @@
       object-fit: cover;
     }
 
-    /* شارات الأسعار فوق الصورة */
     .price-badges {
       position: absolute;
       top: 10px;
@@ -166,7 +180,6 @@
       box-shadow: 0 2px 4px rgba(0,0,0,0.4);
     }
 
-    /* تفاصيل البطاقة والأزرار */
     .card-body {
       padding: 16px;
       display: flex;
@@ -189,7 +202,6 @@
       flex-grow: 1;
     }
 
-    /* أزرار السلة */
     .add-to-cart-btn {
       width: 100%;
       padding: 10px;
@@ -242,7 +254,6 @@
       font-size: 1.1rem;
     }
 
-    /* توقيع المصمم في أسفل الموقع */
     .developer-footer {
       text-align: center;
       padding: 25px 15px;
@@ -275,11 +286,6 @@
       color: #e1306c;
     }
 
-    .developer-footer a:hover {
-      text-decoration: underline;
-    }
-
-    /* شريط السلة الثابت بالأسفل */
     .cart-bar {
       position: fixed;
       bottom: 0;
@@ -330,15 +336,10 @@
       gap: 8px;
       font-size: 0.95rem;
     }
-
-    .send-whatsapp-btn:hover {
-      background-color: #128c7e;
-    }
   </style>
 </head>
 <body>
 
-  <!-- الهيدر واللوجو -->
   <header class="header">
     <div class="logo-wrapper">
       <img src="images/logo.jpg" alt="شاورما الزين" class="main-logo" onerror="this.src='images/logo.png'">
@@ -347,7 +348,6 @@
     <p>أطيب الوجبات الغربية والشاورما والمقبلات - اختر وجباتك وأرسل الطلب عبر الواتساب</p>
   </header>
 
-  <!-- أزرار الفئات السبع القابلة للتمرير -->
   <div class="categories-wrapper">
     <nav class="categories">
       <button class="cat-btn active" onclick="filterMenu('all')">الكل</button>
@@ -361,14 +361,16 @@
     </nav>
   </div>
 
-  <!-- حاوية المنتجات -->
   <main class="container">
-    <div id="menu-container" class="menu-grid"></div>
+    <div id="menu-container">
+      <div class="loading-status">
+        <i class="fas fa-spinner fa-spin"></i> جاري تحميل القائمة...
+      </div>
+    </div>
   </main>
 
-  <!-- توقيع المطوّر والمصمم -->
   <footer class="developer-footer">
-    <p>تصميم وتطوير الموقع بواسطة: <strong style="color: #f8fafc;">عبدالله سماق</strong></p>
+    <p>تصميم وتطوير الموقع بواسطة: <strong style="color: #f8fafc;">عبدالله  سماق</strong></p>
     <p style="margin-top: 4px;">لطلب مواقع إلكترونية أو المنيو الرقمي التواصل عبر:</p>
     <div class="developer-links">
       <a href="https://wa.me/963932510043" target="_blank"><i class="fab fa-whatsapp"></i> +963 932 510 043</a>
@@ -376,7 +378,6 @@
     </div>
   </footer>
 
-  <!-- شريط السلة الثابت بالأسفل -->
   <div id="cart-bar" class="cart-bar">
     <div class="cart-info">
       <span id="cart-count-text" class="cart-count">الطلب: 0 عنصر</span>
@@ -391,62 +392,111 @@
     let fullMenuData = [];
     let cart = {}; 
     const sheetUrl = 'https://docs.google.com/spreadsheets/d/1AwuHd2YCOUpzJKTbj70x_8B-MuzFWGkRTvcL2YRlxdE/gviz/tq?tqx=out:csv';
-    const restaurantPhoneNumber = "963995829459"; // رقم المطعم لاستلام الطلبات
+    const restaurantPhoneNumber = "963995829459";
 
-    // جلب البيانات
-    async function fetchMenuData() {
+    // جلب البيانات مع تخزين مؤقت ومهلة زمنية لمنع التعليق
+    async function loadMenu() {
+      const cachedData = localStorage.getItem('alZainMenuData');
+      
+      // إذا كانت هناك بيانات محفوظة سابقاً في متصفح المستخدم، اعرضها مباشرة فوراً
+      if (cachedData) {
+        try {
+          fullMenuData = JSON.parse(cachedData);
+          renderMenuItems(fullMenuData);
+        } catch(e) {}
+      }
+
+      // جلب أحدث البيانات من Google Sheets بالخلفية
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4000); // 4 ثوان كحد أقصى للانتظار
+
       try {
-        const response = await fetch(sheetUrl);
-        const data = await response.text();
-        fullMenuData = parseCSV(data);
-        renderMenuItems(fullMenuData);
+        const response = await fetch(sheetUrl, { signal: controller.signal });
+        clearTimeout(timeoutId);
+
+        if (!response.ok) throw new Error('فشل جلب البيانات');
+
+        const csvText = await response.text();
+        const parsedData = parseCSV(csvText);
+
+        if (parsedData && parsedData.length > 0) {
+          fullMenuData = parsedData;
+          localStorage.setItem('alZainMenuData', JSON.stringify(fullMenuData));
+          renderMenuItems(fullMenuData);
+        }
       } catch (error) {
-        console.error('حدث خطأ أثناء تحميل البيانات من Google Sheets:', error);
+        if (!cachedData || fullMenuData.length === 0) {
+          const container = document.getElementById('menu-container');
+          container.innerHTML = `
+            <div class="loading-status">
+              عذراً، تعذر تحميل القائمة حالياً. يرجى التأكد من الاتصال بالإنترنت.<br>
+              <button onclick="loadMenu()"><i class="fas fa-sync"></i> إعادة المحاولة</button>
+            </div>
+          `;
+        }
       }
     }
 
-    // تحليل CSV
     function parseCSV(csvText) {
-      const cleanText = csvText.replace(/^\uFEFF/, '');
-      const lines = cleanText.trim().split(/\r?\n/).filter(line => line.trim() !== '');
-      if (lines.length < 2) return [];
+      try {
+        const lines = csvText.replace(/^\uFEFF/, '').trim().split(/\r?\n/);
+        if (lines.length < 2) return [];
 
-      const delimiter = lines[0].includes(';') ? ';' : ',';
-      const headers = lines[0].split(delimiter).map(h => h.trim().replace(/^"|"$/g, '').toLowerCase());
+        const delimiter = lines[0].includes(';') ? ';' : ',';
+        const headers = lines[0].split(delimiter).map(h => h.replace(/^"|"$/g, '').trim().toLowerCase());
 
-      return lines.slice(1).map(line => {
-        const regex = new RegExp(`(?:^|${delimiter})(?:"([^"]*)"|([^"${delimiter}]*))`, 'g');
-        let values = [];
-        let match;
-        while ((match = regex.exec(line)) !== null) {
-          let val = match[1] !== undefined ? match[1] : match[2];
-          values.push(val ? val.trim() : '');
-        }
+        return lines.slice(1).map(line => {
+          if (!line.trim()) return null;
+          
+          let values = [];
+          let insideQuote = false;
+          let currentValue = '';
 
-        let item = {};
-        headers.forEach((header, index) => {
-          item[header] = values[index] !== undefined ? values[index] : '';
-        });
+          for (let i = 0; i < line.length; i++) {
+            let char = line[i];
+            if (char === '"') {
+              insideQuote = !insideQuote;
+            } else if (char === delimiter && !insideQuote) {
+              values.push(currentValue.replace(/^"|"$/g, '').trim());
+              currentValue = '';
+            } else {
+              currentValue += char;
+            }
+          }
+          values.push(currentValue.replace(/^"|"$/g, '').trim());
 
-        const priceTryNum = parseFloat((item.price_try || item.price || '0').toString().replace(/[^0-9.]/g, '')) || 0;
-        const priceSNum = parseFloat((item.price_s || item.price_syp || '0').toString().replace(/[^0-9.]/g, '')) || 0;
+          let item = {};
+          headers.forEach((h, idx) => {
+            item[h] = values[idx] || '';
+          });
 
-        return {
-          title: item.title || item['عنوان'] || '',
-          price_try: priceTryNum,
-          price_s: priceSNum,
-          category: item.category || 'shawarma-meals',
-          description: item.description || '',
-          image: item.image || ''
-        };
-      });
+          const priceTryNum = parseFloat((item.price_try || item.price || '0').toString().replace(/[^0-9.]/g, '')) || 0;
+          const priceSNum = parseFloat((item.price_s || item.price_syp || '0').toString().replace(/[^0-9.]/g, '')) || 0;
+
+          return {
+            title: item.title || item['عنوان'] || '',
+            price_try: priceTryNum,
+            price_s: priceSNum,
+            category: item.category || 'shawarma-meals',
+            description: item.description || '',
+            image: item.image || ''
+          };
+        }).filter(item => item && item.title);
+      } catch (e) {
+        return [];
+      }
     }
 
-    // رسم عناصر المنيو
     function renderMenuItems(menuData) {
       const container = document.getElementById('menu-container');
       if (!container) return;
 
+      if (menuData.length === 0) {
+        container.innerHTML = '<div class="loading-status">لا توجد عناصر مضافة بعد.</div>';
+        return;
+      }
+
+      container.className = 'menu-grid';
       container.innerHTML = menuData.map(item => {
         const imageName = item.image ? item.image.trim() : '';
         const imagePath = imageName ? `images/${imageName}` : 'images/default.jpg';
@@ -456,17 +506,14 @@
           <div class="card">
             <div class="card-img-container">
               <img src="${imagePath}" alt="${item.title}" class="card-img" onerror="this.src='images/default.jpg'">
-              
               <div class="price-badges">
                 <span class="badge-try">${item.price_try} TL</span>
                 <span class="badge-syp">${item.price_s} S</span>
               </div>
             </div>
-            
             <div class="card-body">
               <h3 class="card-title">${item.title}</h3>
               <p class="card-description">${item.description}</p>
-              
               <div id="btn-container-${encodeURIComponent(item.title)}">
                 ${renderCartButton(item, qty)}
               </div>
@@ -476,7 +523,6 @@
       }).join('');
     }
 
-    // أزرار السلة
     function renderCartButton(item, qty) {
       const titleEsc = encodeURIComponent(item.title);
       if (qty === 0) {
@@ -496,11 +542,9 @@
       }
     }
 
-    // تحديث الكمية
     function updateQty(titleEsc, newQty) {
       const title = decodeURIComponent(titleEsc);
       const item = fullMenuData.find(i => i.title === title);
-
       if (!item) return;
 
       if (newQty <= 0) {
@@ -517,7 +561,6 @@
       updateCartBar();
     }
 
-    // تحديث السلة والواتساب
     function updateCartBar() {
       const cartBar = document.getElementById('cart-bar');
       const cartCountText = document.getElementById('cart-count-text');
@@ -542,7 +585,6 @@
         totalItems += qty;
         totalTry += item.price_try * qty;
         totalSyp += item.price_s * qty;
-
         messageLines.push(`• ${item.title} (العدد: ${qty}) - ${item.price_try * qty} TL / ${item.price_s * qty} S`);
       });
 
@@ -555,7 +597,6 @@
       whatsappBtn.href = `https://wa.me/${restaurantPhoneNumber}?text=${whatsappText}`;
     }
 
-    // تصفية الأقسام المحدثة
     function filterMenu(category) {
       document.querySelectorAll('.cat-btn').forEach(btn => btn.classList.remove('active'));
       if (window.event && window.event.target) {
@@ -590,7 +631,7 @@
       }
     }
 
-    document.addEventListener('DOMContentLoaded', fetchMenuData);
+    document.addEventListener('DOMContentLoaded', loadMenu);
   </script>
 </body>
 </html>
